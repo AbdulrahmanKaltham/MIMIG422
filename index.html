@@ -135,7 +135,16 @@
         .btn-navy:hover { background: var(--navy-hover); box-shadow: 0 6px 20px rgba(17,34,64,0.28); }
         .btn-green { background: var(--green); color: var(--white); }
         .btn-green:hover { background: #0b7d52; box-shadow: 0 6px 20px rgba(13,148,96,0.25); }
-        .btn:disabled { opacity: .5; cursor: not-allowed; box-shadow: none !important; }
+        .btn-outline {
+            background: transparent;
+            color: var(--navy);
+            border: 2px solid var(--border);
+        }
+        .btn-outline:hover:not(:disabled) {
+            border-color: var(--navy);
+            background: var(--navy-light);
+        }
+        .btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none !important; }
         .q-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -261,6 +270,17 @@
             flex-wrap: wrap;
             border-top: 1px solid var(--border);
         }
+        .actions-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .actions-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .actions-spacer { flex: 1; }
         .time-badge {
             display: none;
             align-items: center;
@@ -370,8 +390,8 @@
             .info-chip { min-width: 90px; padding: 14px 16px; }
             .info-chip .val { font-size: 22px; }
             .q-body { padding: 18px 14px; }
-            .actions { padding: 14px; }
-            .btn { padding: 11px 24px; font-size: 14px; }
+            .actions { padding: 14px; gap: 8px; }
+            .btn { padding: 11px 20px; font-size: 13px; }
         }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
@@ -454,7 +474,6 @@ const CONFIG = {
 
 /* =====================================================
    QUESTIONS BANK
-   Each image: { note: "...", qs: [ {q, a}, ... ] }
    ===================================================== */
 const bank = {
 
@@ -944,7 +963,7 @@ let idx = 0;
 let timerRef = null;
 let startTs = 0;
 let elapsed = 0;
-let times = [];
+let answeredMap = {};  // imgNum -> seconds (tracks answered questions)
 
 /* ==========================================================
    Utilities
@@ -972,7 +991,7 @@ function startExam() {
     for (let i = 1; i <= CONFIG.totalImages; i++) nums.push(i);
     order = shuffle(nums);
     idx = 0;
-    times = [];
+    answeredMap = {};
 
     document.getElementById('welcomeScreen').style.display = 'none';
     document.getElementById('doneScreen').classList.remove('visible');
@@ -989,12 +1008,13 @@ function renderQuestion() {
     const imgNum = order[idx];
     const data = bank[imgNum] || { qs: [{ q: "Modality?", a: "—" }, { q: "Findings?", a: "—" }, { q: "Diagnosis?", a: "—" }] };
     const remaining = CONFIG.totalImages - idx;
+    const isAnswered = answeredMap[imgNum] !== undefined;
 
     document.getElementById('remainCount').textContent = 'Remaining: ' + remaining;
     document.getElementById('progressFill').style.width =
         ((idx / CONFIG.totalImages) * 100) + '%';
 
-    // Clinical note if exists
+    // Clinical note
     let noteHTML = '';
     if (data.note) {
         noteHTML = `<div class="clinical-note"><i class="fas fa-user-md"></i><span>${data.note}</span></div>`;
@@ -1003,16 +1023,22 @@ function renderQuestion() {
     // Questions HTML
     let qHTML = '';
     data.qs.forEach((item, i) => {
+        const revealedClass = isAnswered ? ' revealed' : '';
         qHTML += `
-        <div class="q-item" id="qi${i}">
+        <div class="q-item${revealedClass}" id="qi${i}">
             <div class="q-text">${i + 1}. ${item.q}</div>
-            <div class="a-text"><i class="fas fa-check-circle" style="margin-right:5px"></i>${item.a}</div>
+            <div class="a-text"${isAnswered ? ' style="display:block"' : ''}><i class="fas fa-check-circle" style="margin-right:5px"></i>${item.a}</div>
         </div>`;
     });
 
+    const isFirst = idx === 0;
     const isLast = idx >= CONFIG.totalImages - 1;
     const nextLabel = isLast ? 'Finish Exam' : 'Next Question';
     const nextIcon = isLast ? 'fa-flag-checkered' : 'fa-arrow-right';
+
+    // Time badge (shown only if already answered)
+    const timeBadgeStyle = isAnswered ? 'show' : '';
+    const timeBadgeText = isAnswered ? 'Time spent: ' + fmt(answeredMap[imgNum]) : '';
 
     document.getElementById('examScreen').innerHTML = `
     <div class="q-card">
@@ -1030,19 +1056,28 @@ function renderQuestion() {
             ${qHTML}
         </div>
         <div class="actions">
-            <button class="btn btn-navy" id="btnReveal" onclick="revealAnswers()">
-                <i class="fas fa-eye"></i> Show Answers
+            <button class="btn btn-outline" id="btnPrev" onclick="goPrev()"${isFirst ? ' disabled' : ''}>
+                <i class="fas fa-arrow-left"></i> Previous
             </button>
-            <div class="time-badge" id="timeBadge">
-                <i class="fas fa-stopwatch"></i>
-                <span id="timeBadgeText"></span>
-            </div>
-            <button class="btn btn-green" id="btnNext" onclick="goNext()" style="display:none">
+
+            ${isAnswered ? `
+                <div class="time-badge ${timeBadgeStyle}">
+                    <i class="fas fa-stopwatch"></i>
+                    <span>${timeBadgeText}</span>
+                </div>
+            ` : `
+                <button class="btn btn-navy" id="btnReveal" onclick="revealAnswers()">
+                    <i class="fas fa-eye"></i> Show Answers
+                </button>
+            `}
+
+            <button class="btn btn-green" id="btnNext" onclick="goNext()"${isAnswered ? '' : ' style="display:none"'}>
                 ${nextLabel} <i class="fas ${nextIcon}"></i>
             </button>
         </div>
     </div>`;
 
+    // Handle image load error
     const mainImg = document.getElementById('mainImg');
     mainImg.onerror = function () {
         this.style.display = 'none';
@@ -1058,7 +1093,13 @@ function renderQuestion() {
         wrap.style.cursor = 'default';
     };
 
-    startTimer();
+    // Start timer only for unanswered questions
+    if (isAnswered) {
+        clearInterval(timerRef);
+        document.getElementById('liveTimer').textContent = fmt(answeredMap[imgNum]);
+    } else {
+        startTimer();
+    }
 }
 
 /* ==========================================================
@@ -1081,26 +1122,45 @@ function stopTimer() {
 }
 
 /* ==========================================================
-   Reveal & Next
+   Reveal Answers
    ========================================================== */
 function revealAnswers() {
     stopTimer();
-    times.push({ imgNum: order[idx], seconds: elapsed });
+    const imgNum = order[idx];
+    answeredMap[imgNum] = elapsed;
 
     document.querySelectorAll('.q-item').forEach(el => el.classList.add('revealed'));
 
-    document.getElementById('timeBadgeText').textContent = 'Time spent: ' + fmt(elapsed);
-    document.getElementById('timeBadge').classList.add('show');
+    // Replace Show Answers button with time badge
+    const btnReveal = document.getElementById('btnReveal');
+    const timeBadgeHTML = `
+        <div class="time-badge show">
+            <i class="fas fa-stopwatch"></i>
+            <span>Time spent: ${fmt(elapsed)}</span>
+        </div>
+    `;
+    btnReveal.insertAdjacentHTML('afterend', timeBadgeHTML);
+    btnReveal.remove();
 
-    document.getElementById('btnReveal').disabled = true;
+    // Show Next button
     document.getElementById('btnNext').style.display = 'inline-flex';
 }
 
+/* ==========================================================
+   Navigation
+   ========================================================== */
 function goNext() {
     idx++;
     if (idx >= CONFIG.totalImages) {
         showDone();
     } else {
+        renderQuestion();
+    }
+}
+
+function goPrev() {
+    if (idx > 0) {
+        idx--;
         renderQuestion();
     }
 }
@@ -1112,13 +1172,22 @@ function showDone() {
     document.getElementById('examScreen').innerHTML = '';
     document.getElementById('topBar').classList.remove('visible');
     document.getElementById('progressTrack').classList.remove('visible');
+    clearInterval(timerRef);
 
-    const totalSec = times.reduce((s, t) => s + t.seconds, 0);
+    // Build time data from answeredMap
+    const timeData = [];
+    for (let i = 1; i <= CONFIG.totalImages; i++) {
+        if (answeredMap[i] !== undefined) {
+            timeData.push({ imgNum: i, seconds: answeredMap[i] });
+        }
+    }
+    timeData.sort((a, b) => a.imgNum - b.imgNum);
+
+    const totalSec = timeData.reduce((s, t) => s + t.seconds, 0);
     document.getElementById('totalTimeText').textContent = 'Total Time: ' + fmt(totalSec);
 
-    const sorted = [...times].sort((a, b) => a.imgNum - b.imgNum);
     let rows = '';
-    sorted.forEach(t => {
+    timeData.forEach(t => {
         rows += `<div class="tt-row"><span>Image ${t.imgNum}</span><span class="tt-time">${fmt(t.seconds)}</span></div>`;
     });
 
