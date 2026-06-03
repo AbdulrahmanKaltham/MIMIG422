@@ -145,6 +145,101 @@
             background: var(--navy-light);
         }
         .btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none !important; }
+        .btn-sm { padding: 8px 18px; font-size: 13px; }
+        .welcome-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+        /* ===== Special Exam Screen ===== */
+        .special-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+        }
+        .special-screen.visible { display: flex; }
+        .special-screen h2 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--navy);
+            margin-bottom: 6px;
+        }
+        .special-screen .sub {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+        .range-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .range-group input {
+            padding: 10px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            width: 220px;
+            text-align: center;
+            transition: border-color .2s;
+            outline: none;
+        }
+        .range-group input:focus { border-color: var(--navy); }
+        .range-group input::placeholder { color: #b0b8c9; font-weight: 400; }
+        .grid-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 8px;
+            margin-bottom: 28px;
+            width: 100%;
+            max-width: 540px;
+        }
+        .cb-item {
+            position: relative;
+            cursor: pointer;
+        }
+        .cb-item input {
+            position: absolute;
+            opacity: 0;
+            width: 0; height: 0;
+        }
+        .cb-item span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--muted);
+            transition: all .15s;
+            user-select: none;
+        }
+        .cb-item:hover span { border-color: var(--navy); color: var(--navy); }
+        .cb-item input:checked + span {
+            background: var(--navy);
+            border-color: var(--navy);
+            color: var(--white);
+        }
+        .selected-count {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+        .special-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+        /* ===== Question Card ===== */
         .q-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -270,17 +365,6 @@
             flex-wrap: wrap;
             border-top: 1px solid var(--border);
         }
-        .actions-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .actions-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .actions-spacer { flex: 1; }
         .time-badge {
             display: none;
             align-items: center;
@@ -392,6 +476,9 @@
             .q-body { padding: 18px 14px; }
             .actions { padding: 14px; gap: 8px; }
             .btn { padding: 11px 20px; font-size: 13px; }
+            .checkbox-grid { grid-template-columns: repeat(6, 1fr); gap: 6px; }
+            .cb-item span { font-size: 12px; }
+            .range-group input { width: 180px; }
         }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
@@ -422,6 +509,8 @@
     </div>
 
     <div class="container">
+
+        <!-- ===== Welcome ===== -->
         <section class="welcome" id="welcomeScreen">
             <div class="icon-box"><i class="fas fa-x-ray"></i></div>
             <h1>OSPE MIMIG 422</h1>
@@ -445,13 +534,55 @@
                 Answer on your paper, then click "Show Answers" to reveal
                 the correct answers and see how much time you spent on each question.
             </p>
-            <button class="btn btn-navy" onclick="startExam()">
-                <i class="fas fa-play"></i> Start Exam
-            </button>
+            <div class="welcome-btns">
+                <button class="btn btn-navy" onclick="startExam()">
+                    <i class="fas fa-play"></i> Start Exam
+                </button>
+                <button class="btn btn-outline" onclick="openSpecialExam()">
+                    <i class="fas fa-list-check"></i> Special Exam
+                </button>
+            </div>
         </section>
 
+        <!-- ===== Special Exam Selection ===== -->
+        <section class="special-screen" id="specialScreen">
+            <h2>Special Exam</h2>
+            <p class="sub">Select the questions you want to include</p>
+
+            <div class="range-group">
+                <input type="text" id="rangeInput" placeholder="e.g. 5-67  or  1,3,5-10">
+                <button class="btn btn-navy btn-sm" onclick="applyRange()">
+                    <i class="fas fa-check"></i> Apply
+                </button>
+            </div>
+
+            <div class="grid-controls">
+                <button class="btn btn-outline btn-sm" onclick="selectClearAll('select')">
+                    <i class="fas fa-check-double"></i> Select All
+                </button>
+                <button class="btn btn-outline btn-sm" onclick="selectClearAll('clear')">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+            </div>
+
+            <div class="checkbox-grid" id="checkboxGrid"></div>
+
+            <div class="selected-count" id="selectedCount">0 questions selected</div>
+
+            <div class="special-btns">
+                <button class="btn btn-outline" onclick="backToWelcome()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <button class="btn btn-green" id="startSpecialBtn" onclick="startSpecialExam()" disabled>
+                    <i class="fas fa-play"></i> Start Exam
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== Exam ===== -->
         <main id="examScreen"></main>
 
+        <!-- ===== Done ===== -->
         <section class="done" id="doneScreen">
             <div class="check-circle"><i class="fas fa-check"></i></div>
             <h2>Exam Complete</h2>
@@ -463,6 +594,7 @@
                 </button>
             </div>
         </section>
+
     </div>
 
 <script>
@@ -683,7 +815,7 @@ const bank = {
 
 35: { qs: [
     { q: "Modality?", a: "Abdominal CT with contrast" },
-    { q: "Findings?", a: "Hyperdense calculi in left ureter with dilated renal pelvis" },
+    { q: "Findings?", a: "Hyperdense calculi in left ureter with dilated renal pelvis" }
 ]},
 
 36: { qs: [
@@ -963,7 +1095,7 @@ let idx = 0;
 let timerRef = null;
 let startTs = 0;
 let elapsed = 0;
-let answeredMap = {};  // imgNum -> seconds (tracks answered questions)
+let answeredMap = {};
 
 /* ==========================================================
    Utilities
@@ -984,7 +1116,7 @@ function fmt(sec) {
 }
 
 /* ==========================================================
-   Start Exam
+   Normal Exam Start
    ========================================================== */
 function startExam() {
     const nums = [];
@@ -994,6 +1126,7 @@ function startExam() {
     answeredMap = {};
 
     document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('specialScreen').classList.remove('visible');
     document.getElementById('doneScreen').classList.remove('visible');
     document.getElementById('topBar').classList.add('visible');
     document.getElementById('progressTrack').classList.add('visible');
@@ -1002,25 +1135,114 @@ function startExam() {
 }
 
 /* ==========================================================
-   Render Question
+   Special Exam
+   ========================================================== */
+function openSpecialExam() {
+    document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('specialScreen').classList.add('visible');
+    generateCheckboxes();
+    updateSelectedCount();
+}
+
+function backToWelcome() {
+    document.getElementById('specialScreen').classList.remove('visible');
+    document.getElementById('welcomeScreen').style.display = 'flex';
+}
+
+function generateCheckboxes() {
+    const grid = document.getElementById('checkboxGrid');
+    grid.innerHTML = '';
+    for (let i = 1; i <= CONFIG.totalImages; i++) {
+        grid.innerHTML += `
+        <label class="cb-item">
+            <input type="checkbox" id="cb${i}" value="${i}" onchange="updateSelectedCount()">
+            <span>${i}</span>
+        </label>`;
+    }
+}
+
+function updateSelectedCount() {
+    const count = document.querySelectorAll('.cb-item input:checked').length;
+    document.getElementById('selectedCount').textContent = count + ' question' + (count !== 1 ? 's' : '') + ' selected';
+    document.getElementById('startSpecialBtn').disabled = count === 0;
+}
+
+function selectClearAll(action) {
+    document.querySelectorAll('.cb-item input').forEach(cb => {
+        cb.checked = action === 'select';
+    });
+    updateSelectedCount();
+}
+
+function applyRange() {
+    const input = document.getElementById('rangeInput').value.trim();
+    if (!input) return;
+
+    const nums = new Set();
+    const parts = input.split(',');
+
+    parts.forEach(part => {
+        part = part.trim();
+        if (part.includes('-')) {
+            const bounds = part.split('-').map(s => parseInt(s.trim()));
+            if (bounds.length === 2 && !isNaN(bounds[0]) && !isNaN(bounds[1])) {
+                const start = Math.max(1, Math.min(bounds[0], bounds[1]));
+                const end = Math.min(CONFIG.totalImages, Math.max(bounds[0], bounds[1]));
+                for (let i = start; i <= end; i++) nums.add(i);
+            }
+        } else {
+            const n = parseInt(part);
+            if (!isNaN(n) && n >= 1 && n <= CONFIG.totalImages) nums.add(n);
+        }
+    });
+
+    // Check the matching boxes
+    nums.forEach(n => {
+        const cb = document.getElementById('cb' + n);
+        if (cb) cb.checked = true;
+    });
+
+    updateSelectedCount();
+}
+
+function startSpecialExam() {
+    const selected = [];
+    document.querySelectorAll('.cb-item input:checked').forEach(cb => {
+        selected.push(parseInt(cb.value));
+    });
+    if (selected.length === 0) return;
+
+    order = shuffle(selected);
+    idx = 0;
+    answeredMap = {};
+
+    document.getElementById('specialScreen').classList.remove('visible');
+    document.getElementById('doneScreen').classList.remove('visible');
+    document.getElementById('topBar').classList.add('visible');
+    document.getElementById('progressTrack').classList.add('visible');
+
+    renderQuestion();
+}
+
+/* ==========================================================
+   Render Question (uses order.length for dynamic total)
    ========================================================== */
 function renderQuestion() {
+    const totalQ = order.length;
     const imgNum = order[idx];
     const data = bank[imgNum] || { qs: [{ q: "Modality?", a: "—" }, { q: "Findings?", a: "—" }, { q: "Diagnosis?", a: "—" }] };
-    const remaining = CONFIG.totalImages - idx;
+    const remaining = totalQ - idx;
     const isAnswered = answeredMap[imgNum] !== undefined;
 
     document.getElementById('remainCount').textContent = 'Remaining: ' + remaining;
     document.getElementById('progressFill').style.width =
-        ((idx / CONFIG.totalImages) * 100) + '%';
+        ((idx / totalQ) * 100) + '%';
 
-    // Clinical note
     let noteHTML = '';
     if (data.note) {
         noteHTML = `<div class="clinical-note"><i class="fas fa-user-md"></i><span>${data.note}</span></div>`;
     }
 
-    // Questions HTML
     let qHTML = '';
     data.qs.forEach((item, i) => {
         const revealedClass = isAnswered ? ' revealed' : '';
@@ -1032,11 +1254,10 @@ function renderQuestion() {
     });
 
     const isFirst = idx === 0;
-    const isLast = idx >= CONFIG.totalImages - 1;
+    const isLast = idx >= totalQ - 1;
     const nextLabel = isLast ? 'Finish Exam' : 'Next Question';
     const nextIcon = isLast ? 'fa-flag-checkered' : 'fa-arrow-right';
 
-    // Time badge (shown only if already answered)
     const timeBadgeStyle = isAnswered ? 'show' : '';
     const timeBadgeText = isAnswered ? 'Time spent: ' + fmt(answeredMap[imgNum]) : '';
 
@@ -1077,7 +1298,6 @@ function renderQuestion() {
         </div>
     </div>`;
 
-    // Handle image load error
     const mainImg = document.getElementById('mainImg');
     mainImg.onerror = function () {
         this.style.display = 'none';
@@ -1093,7 +1313,6 @@ function renderQuestion() {
         wrap.style.cursor = 'default';
     };
 
-    // Start timer only for unanswered questions
     if (isAnswered) {
         clearInterval(timerRef);
         document.getElementById('liveTimer').textContent = fmt(answeredMap[imgNum]);
@@ -1131,7 +1350,6 @@ function revealAnswers() {
 
     document.querySelectorAll('.q-item').forEach(el => el.classList.add('revealed'));
 
-    // Replace Show Answers button with time badge
     const btnReveal = document.getElementById('btnReveal');
     const timeBadgeHTML = `
         <div class="time-badge show">
@@ -1142,7 +1360,6 @@ function revealAnswers() {
     btnReveal.insertAdjacentHTML('afterend', timeBadgeHTML);
     btnReveal.remove();
 
-    // Show Next button
     document.getElementById('btnNext').style.display = 'inline-flex';
 }
 
@@ -1151,7 +1368,7 @@ function revealAnswers() {
    ========================================================== */
 function goNext() {
     idx++;
-    if (idx >= CONFIG.totalImages) {
+    if (idx >= order.length) {
         showDone();
     } else {
         renderQuestion();
@@ -1174,7 +1391,6 @@ function showDone() {
     document.getElementById('progressTrack').classList.remove('visible');
     clearInterval(timerRef);
 
-    // Build time data from answeredMap
     const timeData = [];
     for (let i = 1; i <= CONFIG.totalImages; i++) {
         if (answeredMap[i] !== undefined) {
