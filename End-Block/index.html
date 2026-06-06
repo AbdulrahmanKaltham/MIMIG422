@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSPE MIMIG 422 (2026)</title>
+    <title>MIMG 422 End Block</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -103,20 +103,9 @@
             box-shadow: 0 8px 30px rgba(17,34,64,0.2);
         }
         .welcome .icon-box i { font-size: 38px; color: var(--white); }
-        .welcome h1 { font-size: 34px; font-weight: 900; color: var(--navy); }
+        .welcome h1 { font-size: 32px; font-weight: 900; color: var(--navy); }
         .welcome .subtitle { font-size: 20px; font-weight: 300; color: var(--muted); margin-top: 4px; }
-        .info-row { display: flex; gap: 14px; margin: 32px 0; flex-wrap: wrap; justify-content: center; }
-        .info-chip {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px 24px;
-            text-align: center;
-            min-width: 120px;
-        }
-        .info-chip .val { font-size: 26px; font-weight: 900; color: var(--navy); }
-        .info-chip .lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
-        .welcome .desc { color: var(--muted); font-size: 14px; line-height: 1.9; max-width: 520px; margin-bottom: 28px; }
+        .welcome .desc { color: var(--muted); font-size: 14px; line-height: 1.9; max-width: 520px; margin-top: 16px; margin-bottom: 28px; }
         .btn {
             border: none;
             padding: 13px 36px;
@@ -148,96 +137,49 @@
         .btn-sm { padding: 8px 18px; font-size: 13px; }
         .welcome-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 
-        /* ===== Special Exam Screen ===== */
-        .special-screen {
+        /* ===== Selection Screen ===== */
+        .selection-screen {
             display: none;
             flex-direction: column;
             align-items: center;
             padding-top: 30px;
+            animation: slideUp .4s ease;
         }
-        .special-screen.visible { display: flex; }
-        .special-screen h2 {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--navy);
-            margin-bottom: 6px;
+        .selection-screen.visible { display: flex; }
+        .selection-screen h2 {
+            font-size: 24px; font-weight: 900; color: var(--navy); margin-bottom: 6px;
         }
-        .special-screen .sub {
-            font-size: 14px;
-            color: var(--muted);
-            margin-bottom: 24px;
+        .selection-screen .sub {
+            font-size: 14px; color: var(--muted); margin-bottom: 24px;
         }
-        .range-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
+        .select-group {
+            width: 100%; max-width: 600px; margin-bottom: 28px; text-align: center;
         }
-        .range-group input {
-            padding: 10px 16px;
+        .select-group label {
+            display: block; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 12px;
+        }
+        .chip-grid {
+            display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+        }
+        .chip-btn {
+            position: relative; cursor: pointer;
+        }
+        .chip-btn input {
+            position: absolute; opacity: 0; width: 0; height: 0;
+        }
+        .chip-btn span {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 10px 20px;
             border: 2px solid var(--border);
             border-radius: 10px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            width: 220px;
-            text-align: center;
-            transition: border-color .2s;
-            outline: none;
+            font-weight: 600; font-size: 14px; color: var(--muted);
+            transition: all .15s; user-select: none; background: var(--bg);
         }
-        .range-group input:focus { border-color: var(--navy); }
-        .range-group input::placeholder { color: #b0b8c9; font-weight: 400; }
-        .grid-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+        .chip-btn:hover span { border-color: var(--navy); color: var(--navy); }
+        .chip-btn input:checked + span {
+            background: var(--navy); border-color: var(--navy); color: var(--white);
         }
-        .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(9, 1fr);
-            gap: 8px;
-            margin-bottom: 28px;
-            width: 100%;
-            max-width: 540px;
-        }
-        .cb-item {
-            position: relative;
-            cursor: pointer;
-        }
-        .cb-item input {
-            position: absolute;
-            opacity: 0;
-            width: 0; height: 0;
-        }
-        .cb-item span {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            aspect-ratio: 1;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--muted);
-            transition: all .15s;
-            user-select: none;
-        }
-        .cb-item:hover span { border-color: var(--navy); color: var(--navy); }
-        .cb-item input:checked + span {
-            background: var(--navy);
-            border-color: var(--navy);
-            color: var(--white);
-        }
-        .selected-count {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--navy);
-            margin-bottom: 16px;
-        }
-        .special-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        .selection-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
 
         /* ===== Question Card ===== */
         .q-card {
@@ -253,99 +195,33 @@
             from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .img-wrap {
-            background: var(--white);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 280px;
-            max-height: 540px;
-            cursor: zoom-in;
-            padding: 8px;
-        }
-        .img-wrap img {
-            max-width: 100%;
-            max-height: 520px;
-            object-fit: contain;
-            display: block;
-        }
-        .img-wrap .badge {
-            position: absolute;
-            top: 10px; right: 10px;
-            background: rgba(17,34,64,0.7);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .img-wrap .zoom-hint {
-            position: absolute;
-            bottom: 10px; right: 10px;
-            background: rgba(17,34,64,0.6);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .img-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding: 48px 20px;
-            color: #6b7280;
-        }
-        .img-placeholder i { font-size: 40px; color: #374151; }
-        .img-placeholder span { font-size: 14px; }
-        .img-placeholder small { font-size: 11px; color: #9ca3af; }
-        .img-divider { height: 1px; background: var(--border); }
-        .q-body { padding: 24px; }
-        .q-body .section-title {
-            font-size: 17px;
-            font-weight: 700;
+        .q-body { padding: 28px 24px; }
+        .q-body .lecture-tag {
+            display: inline-block;
+            background: var(--navy-light);
             color: var(--navy);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        .clinical-note {
-            background: #fef9c3;
-            border: 1px solid #fde68a;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #92400e;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-        .clinical-note i { margin-top: 2px; flex-shrink: 0; }
         .q-item {
             background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
             transition: border-color .3s, background .3s;
         }
         .q-item:last-child { margin-bottom: 0; }
-        .q-item .q-text { font-size: 15px; font-weight: 600; color: var(--text); }
+        .q-item .q-text { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.6; }
         .q-item .a-text {
             display: none;
-            margin-top: 12px;
-            padding-top: 12px;
+            margin-top: 14px;
+            padding-top: 14px;
             border-top: 1.5px dashed var(--border);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             color: var(--green);
             animation: fadeAnswer .35s ease;
@@ -365,52 +241,92 @@
             flex-wrap: wrap;
             border-top: 1px solid var(--border);
         }
-        .time-badge {
-            display: none;
-            align-items: center;
-            gap: 6px;
-            background: var(--navy-light);
-            color: var(--navy);
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 700;
-            animation: fadeAnswer .35s ease;
-        }
-        .time-badge.show { display: inline-flex; }
-        .zoom-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,0.95);
-            z-index: 500;
-            place-items: center;
-            cursor: zoom-out;
-            animation: fadeIn .25s ease;
-        }
-        .zoom-overlay.open { display: grid; }
-        .zoom-overlay img {
-            max-width: 95vw;
-            max-height: 95vh;
-            object-fit: contain;
-        }
-        .zoom-close {
-            position: absolute;
-            top: 16px; right: 16px;
-            color: var(--navy);
-            font-size: 28px;
+
+        /* ===== Flashcards ===== */
+        .fc-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 600px;
+            height: 380px;
+            margin: 20px auto 30px;
             cursor: pointer;
-            background: rgba(17,34,64,0.08);
-            width: 44px; height: 44px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            transition: background .2s;
         }
-        .zoom-close:hover { background: rgba(17,34,64,0.18); }
-        @keyframes fadeIn {
-            from { opacity: 0; } to { opacity: 1; }
+        .fc-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
         }
+        .fc-inner.flipped {
+            transform: rotateY(180deg);
+        }
+        .fc-front, .fc-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+        }
+        .fc-front {
+            background: var(--card);
+            color: var(--navy);
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+        .fc-front .fc-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .fc-back {
+            background: var(--navy);
+            color: var(--white);
+            transform: rotateY(180deg);
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+        .fc-back .fc-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .fc-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 10px;
+        }
+        .fc-counter {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* ===== Done ===== */
         .done {
             display: none;
             flex-direction: column;
@@ -434,51 +350,21 @@
         }
         .done .check-circle i { font-size: 42px; color: var(--white); }
         .done h2 { font-size: 28px; font-weight: 900; color: var(--navy); }
-        .done .total-time { font-size: 17px; color: var(--muted); margin-top: 4px; margin-bottom: 28px; }
-        .time-table {
-            width: 100%;
-            max-width: 480px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 28px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        }
-        .time-table .tt-head {
-            background: var(--navy);
-            color: var(--white);
-            padding: 12px 18px;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-        }
-        .time-table .tt-body { max-height: 360px; overflow-y: auto; }
-        .time-table .tt-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 18px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-        .time-table .tt-row:last-child { border-bottom: none; }
-        .time-table .tt-row:nth-child(even) { background: var(--bg); }
-        .time-table .tt-row .tt-time { font-weight: 700; color: var(--navy); }
+        .done .sub-done { font-size: 17px; color: var(--muted); margin-top: 4px; margin-bottom: 28px; }
         .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
         @media (max-width: 640px) {
             .top-bar { padding: 0 12px; }
             .top-bar .brand { font-size: 12px; }
             .pill { font-size: 11px; padding: 4px 10px; }
             .welcome h1 { font-size: 26px; }
-            .info-chip { min-width: 90px; padding: 14px 16px; }
-            .info-chip .val { font-size: 22px; }
-            .q-body { padding: 18px 14px; }
+            .q-body { padding: 20px 16px; }
             .actions { padding: 14px; gap: 8px; }
             .btn { padding: 11px 20px; font-size: 13px; }
-            .checkbox-grid { grid-template-columns: repeat(6, 1fr); gap: 6px; }
-            .cb-item span { font-size: 12px; }
-            .range-group input { width: 180px; }
+            .chip-btn span { padding: 8px 14px; font-size: 13px; }
+            .fc-container { height: 320px; }
+            .fc-front { font-size: 18px; }
+            .fc-back { font-size: 16px; }
         }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
@@ -488,14 +374,10 @@
 <body>
 
     <header class="top-bar" id="topBar">
-        <span class="brand">OSPE MIMIG 422 (2026)</span>
-        <div class="pill">
-            <i class="fas fa-stopwatch"></i>
-            <span id="liveTimer">00:00</span>
-        </div>
+        <span class="brand">MIMG 422</span>
         <div class="pill">
             <i class="fas fa-list-ol"></i>
-            <span id="remainCount">Remaining: 81</span>
+            <span id="remainCount">Remaining: 0</span>
         </div>
     </header>
 
@@ -503,78 +385,45 @@
         <div class="progress-fill" id="progressFill"></div>
     </div>
 
-    <div class="zoom-overlay" id="zoomOverlay">
-        <div class="zoom-close" onclick="closeZoom()"><i class="fas fa-times"></i></div>
-        <img id="zoomImg" src="" alt="Zoomed">
-    </div>
-
     <div class="container">
 
         <!-- ===== Welcome ===== -->
         <section class="welcome" id="welcomeScreen">
-            <div class="icon-box"><i class="fas fa-x-ray"></i></div>
-            <h1>OSPE MIMIG 422</h1>
-            <div class="subtitle">2026</div>
-            <div class="info-row">
-                <div class="info-chip">
-                    <div class="val" id="totalDisplay">81</div>
-                    <div class="lbl">Questions</div>
-                </div>
-                <div class="info-chip">
-                    <div class="val"><i class="fas fa-shuffle" style="font-size:22px"></i></div>
-                    <div class="lbl">Random Order</div>
-                </div>
-                <div class="info-chip">
-                    <div class="val"><i class="fas fa-stopwatch" style="font-size:22px"></i></div>
-                    <div class="lbl">Timer</div>
-                </div>
-            </div>
+            <div class="icon-box"><i class="fas fa-book-medical"></i></div>
+            <h1>MIMG 422 End Block</h1>
+            <div class="subtitle">Past Questions & Flashcards</div>
             <p class="desc">
-                Radiology images are displayed in a random order each time.
-                Answer on your paper, then click "Show Answers" to reveal
-                the correct answers and see how much time you spent on each question.
+                Practice past questions or review high-yield flashcards organized by lecture.
             </p>
             <div class="welcome-btns">
-                <button class="btn btn-navy" onclick="startExam()">
-                    <i class="fas fa-play"></i> Start Exam
+                <button class="btn btn-navy" onclick="openSelection('exam')">
+                    <i class="fas fa-pen-to-square"></i> Past Questions
                 </button>
-                <button class="btn btn-outline" onclick="openSpecialExam()">
-                    <i class="fas fa-list-check"></i> Special Exam
+                <button class="btn btn-green" onclick="openSelection('flash')">
+                    <i class="fas fa-clone"></i> Flashcards
                 </button>
             </div>
         </section>
 
-        <!-- ===== Special Exam Selection ===== -->
-        <section class="special-screen" id="specialScreen">
-            <h2>Special Exam</h2>
-            <p class="sub">Select the questions you want to include</p>
+        <!-- ===== Selection Screen ===== -->
+        <section class="selection-screen" id="selectionScreen">
+            <h2 id="selectionTitle">Customize Your Practice</h2>
+            <p class="sub">Choose a lecture or go random</p>
 
-            <div class="range-group">
-                <input type="text" id="rangeInput" placeholder="e.g. 5-67  or  1,3,5-10">
-                <button class="btn btn-navy btn-sm" onclick="applyRange()">
-                    <i class="fas fa-check"></i> Apply
-                </button>
+            <div class="select-group">
+                <label><i class="fas fa-book" style="margin-right:6px"></i> Select Lecture</label>
+                <div class="chip-grid" id="lectureGrid"></div>
             </div>
 
-            <div class="grid-controls">
-                <button class="btn btn-outline btn-sm" onclick="selectClearAll('select')">
-                    <i class="fas fa-check-double"></i> Select All
-                </button>
-                <button class="btn btn-outline btn-sm" onclick="selectClearAll('clear')">
-                    <i class="fas fa-times"></i> Clear
-                </button>
-            </div>
-
-            <div class="checkbox-grid" id="checkboxGrid"></div>
-
-            <div class="selected-count" id="selectedCount">0 questions selected</div>
-
-            <div class="special-btns">
+            <div class="selection-btns">
                 <button class="btn btn-outline" onclick="backToWelcome()">
                     <i class="fas fa-arrow-left"></i> Back
                 </button>
-                <button class="btn btn-green" id="startSpecialBtn" onclick="startSpecialExam()" disabled>
-                    <i class="fas fa-play"></i> Start Exam
+                <button class="btn btn-navy" id="startExamBtn" onclick="startPractice()" style="display:none">
+                    <i class="fas fa-play"></i> Start
+                </button>
+                <button class="btn btn-green" id="startFlashBtn" onclick="startFlashcards()" style="display:none">
+                    <i class="fas fa-play"></i> Start
                 </button>
             </div>
         </section>
@@ -582,15 +431,39 @@
         <!-- ===== Exam ===== -->
         <main id="examScreen"></main>
 
+        <!-- ===== Flashcards ===== -->
+        <section id="flashScreen" style="display:none; padding-top: 20px;">
+            <div class="fc-container" onclick="flipCard()">
+                <div class="fc-inner" id="flashInner">
+                    <div class="fc-front">
+                        <span class="fc-label">Question</span>
+                        <span id="flashFrontText"></span>
+                    </div>
+                    <div class="fc-back">
+                        <span class="fc-label">Answer</span>
+                        <span id="flashBackText"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="fc-controls">
+                <button class="btn btn-outline btn-sm" onclick="prevFlashcard()"><i class="fas fa-arrow-left"></i> Prev</button>
+                <div class="fc-counter" id="flashCounter">1 / 1</div>
+                <button class="btn btn-outline btn-sm" onclick="nextFlashcard()">Next <i class="fas fa-arrow-right"></i></button>
+                <button class="btn btn-navy btn-sm" onclick="shuffleFlashcards()"><i class="fas fa-shuffle"></i> Shuffle</button>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn btn-outline btn-sm" onclick="backToWelcomeFromFlash()"><i class="fas fa-home"></i> Main Menu</button>
+            </div>
+        </section>
+
         <!-- ===== Done ===== -->
         <section class="done" id="doneScreen">
             <div class="check-circle"><i class="fas fa-check"></i></div>
-            <h2>Exam Complete</h2>
-            <div class="total-time" id="totalTimeText"></div>
-            <div class="time-table" id="timeTable"></div>
+            <h2>Complete!</h2>
+            <div class="sub-done" id="doneText"></div>
             <div class="btn-row">
-                <button class="btn btn-navy" onclick="restartExam()">
-                    <i class="fas fa-redo"></i> Restart Exam
+                <button class="btn btn-navy" onclick="restart()">
+                    <i class="fas fa-redo"></i> Practice Again
                 </button>
             </div>
         </section>
@@ -598,504 +471,233 @@
     </div>
 
 <script>
-const CONFIG = {
-    imageFolder: 'images/',
-    imageExt: '.jpg',
-    totalImages: 81
-};
-
 /* =====================================================
    QUESTIONS BANK
    ===================================================== */
 const bank = {
-
-1: { qs: [
-    { q: "Modality?", a: "Radionuclide bone scan 99mTc" },
-    { q: "Findings?", a: "Increased uptake in femur" },
-    { q: "Diagnosis?", a: "Paget's disease" }
-]},
-
-2: { qs: [
-    { q: "Modality?", a: "Mammogram" },
-    { q: "Findings?", a: "Microcalcification" },
-    { q: "Diagnosis?", a: "Carcinoma of breast" }
-]},
-
-3: { qs: [
-    { q: "Modality?", a: "Mammogram" },
-    { q: "Findings?", a: "High density lesion with irregular margins" },
-    { q: "Diagnosis?", a: "Carcinoma of breast" }
-]},
-
-4: { qs: [
-    { q: "Modality?", a: "Double contrast enema" },
-    { q: "Contrast used?", a: "Barium & Air" }
-]},
-
-5: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Diagnosis?", a: "Pneumonia" },
-    { q: "Which lobe?", a: "Right lower lobe" }
-]},
-
-6: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Diagnosis?", a: "Lung collapse" },
-    { q: "Which lobe?", a: "Right middle lobe" },
-    { q: "Sign?", a: "Silhouette sign (obliteration of lower right cardiac border)" }
-]},
-
-7: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Left hemithorax opaque with air bronchograms, no volume loss, no shifting of trachea or heart" },
-    { q: "Diagnosis?", a: "Pneumonia" }
-]},
-
-8: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Left hemithorax opaque without air bronchograms, decreased volume, shifting of trachea to left" },
-    { q: "Diagnosis?", a: "Lung collapse" }
-]},
-
-9: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Meniscus sign" },
-    { q: "Diagnosis?", a: "Large bilateral pleural effusion" },
-    { q: "Cause?", a: "Congestive heart failure" }
-]},
-
-10: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Air within pleural cavity" },
-    { q: "Diagnosis?", a: "Pneumothorax" }
-]},
-
-11: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Air under diaphragm" },
-    { q: "Diagnosis?", a: "Pneumoperitoneum" },
-    { q: "Cause?", a: "Perforation of bowel" }
-]},
-
-12: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Split pleural sign (lenticular, biconvex)" },
-    { q: "Diagnosis?", a: "Lung empyema" }
-]},
-
-13: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Fluid surrounding the heart" },
-    { q: "Diagnosis?", a: "Pericardial effusion" }
-]},
-
-14: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Cardiomegaly with globular (flask-shaped) heart" },
-    { q: "Diagnosis?", a: "Pericardial effusion" },
-    { q: "Cause?", a: "Viral pericarditis" }
-]},
-
-15: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Straight/convex left heart border, double density of right cardiac border, elevated left main bronchus, splaying of carina" },
-    { q: "Diagnosis?", a: "Mitral stenosis" }
-]},
-
-16: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Batwing or butterfly appearance" },
-    { q: "Diagnosis?", a: "Pulmonary edema" }
-]},
-
-17: { qs: [
-    { q: "Modality?", a: "Plain X-Ray abdomen" },
-    { q: "Findings?", a: "Coffee bean sign" },
-    { q: "Diagnosis?", a: "Sigmoid volvulus" }
-]},
-
-18: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Calcification within the pancreas" },
-    { q: "Diagnosis?", a: "Chronic pancreatitis" }
-]},
-
-19: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Ruptured spleen" }
-]},
-
-20: { qs: [
-    { q: "Modality?", a: "Barium swallow" },
-    { q: "Findings?", a: "Contrast filled the pouch protruding from esophageal wall" },
-    { q: "Diagnosis?", a: "Zenker's diverticulum" }
-]},
-
-21: { qs: [
-    { q: "Modality?", a: "Single contrast barium enema" },
-    { q: "Findings?", a: "Haustra are lost, narrow & short colon (rigid tube)" },
-    { q: "Diagnosis?", a: "Ulcerative colitis" }
-]},
-
-22: { qs: [
-    { q: "Modality?", a: "Double contrast barium enema" },
-    { q: "Findings?", a: "Narrow & short colon (lead pipe appearance)" },
-    { q: "Diagnosis?", a: "Ulcerative colitis" }
-]},
-
-23: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Hyperechoic with posterior acoustic shadow" },
-    { q: "Diagnosis?", a: "Cholelithiasis" }
-]},
-
-24: { qs: [
-    { q: "Modality?", a: "Radionuclide bone scan" },
-    { q: "Findings?", a: "Increased uptake in multiple areas" },
-    { q: "Diagnosis?", a: "Metastasis" }
-]},
-
-25: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Distal radius fracture with ulnar head dislocation and first metacarpal fracture" },
-    { q: "Diagnosis?", a: "Galeazzi fracture" }
-]},
-
-26: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Proximal ulna fracture with anterior radial head dislocation" },
-    { q: "Diagnosis?", a: "Monteggia fracture" }
-]},
-
-27: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Lightbulb appearance" },
-    { q: "Diagnosis?", a: "Posterior shoulder dislocation" },
-    { q: "Cause?", a: "Electric shock or epileptic seizure" }
-]},
-
-28: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Fracture of humeral neck and greater tuberosity" }
-]},
-
-29: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Impacted femoral neck fracture" }
-]},
-
-30: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Intertrochanteric fracture" }
-]},
-
-31: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Growth plate is widened" },
-    { q: "Diagnosis?", a: "Rickets" }
-]},
-
-32: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Decreased density, expansile lytic lesion, eccentric in the metaphysis" },
-    { q: "Diagnosis?", a: "Giant cell tumor" }
-]},
-
-33: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Rugger jersey spine" },
-    { q: "Diagnosis?", a: "Renal osteodystrophy" }
-]},
-
-34: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Bamboo spine" },
-    { q: "Diagnosis?", a: "Ankylosing spondylitis" }
-]},
-
-35: { qs: [
-    { q: "Modality?", a: "Abdominal CT with contrast" },
-    { q: "Findings?", a: "Hyperdense calculi in left ureter with dilated renal pelvis" }
-]},
-
-36: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Bilateral enlargement of kidney with multiple hypodense cysts" },
-    { q: "Diagnosis?", a: "Autosomal dominant polycystic kidney disease" }
-]},
-
-37: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Round hyperechoic lesion at the upper pole with dorsal acoustic shadow" },
-    { q: "Diagnosis?", a: "Kidney stone" }
-]},
-
-38: { qs: [
-    { q: "Modality?", a: "CT without contrast" },
-    { q: "Diagnosis?", a: "Kidney stone" }
-]},
-
-39: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Hyperdense stone, acoustic shadow" },
-    { q: "Diagnosis?", a: "Bladder calculus" }
-]},
-
-40: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Anechoic (fluid surrounding normal testicle)" },
-    { q: "Diagnosis?", a: "Hydrocele" }
-]},
-
-41: { note: "A man presents with testicular atrophy", qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Dilated pampiniform veins" },
-    { q: "Diagnosis?", a: "Varicocele" }
-]},
-
-42: { note: "A man presents with testicular atrophy", qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Venous reflux" },
-    { q: "Diagnosis?", a: "Varicocele" }
-]},
-
-43: { qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Edematous epididymis with increased vascularity in epididymis" },
-    { q: "Diagnosis?", a: "Epididymitis" }
-]},
-
-44: { qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Edematous epididymis with increased vascularity in testes" },
-    { q: "Diagnosis?", a: "Orchitis" }
-]},
-
-45: { qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Decreased vascularity in right testis" },
-    { q: "Diagnosis?", a: "Testicular torsion" }
-]},
-
-46: { qs: [
-    { q: "Modality?", a: "HSG" },
-    { q: "Diagnosis?", a: "Bilateral hydrosalpinx" }
-]},
-
-47: { qs: [
-    { q: "Modality?", a: "HSG" },
-    { q: "Diagnosis?", a: "Unilateral hydrosalpinx" }
-]},
-
-48: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Well-developed teeth within the cyst" },
-    { q: "Diagnosis?", a: "Dermoid cyst" }
-]},
-
-49: { qs: [
-    { q: "Modality?", a: "Transvaginal ultrasound" },
-    { q: "Findings?", a: "Enlarged ovaries with multiple anechoic cysts" },
-    { q: "Diagnosis?", a: "Polycystic ovarian syndrome (PCOS)" }
-]},
-
-50: { qs: [
-    { q: "Modality?", a: "Sagittal T1 MRI brain" },
-    { q: "Findings?", a: "Agenesis of corpus callosum" }
-]},
-
-51: { qs: [
-    { q: "Modality?", a: "CT with contrast" },
-    { q: "Pattern of enhancement?", a: "Homogeneous" },
-    { q: "Cause?", a: "Meningioma" }
-]},
-
-52: { qs: [
-    { q: "Modality?", a: "CT with contrast" },
-    { q: "Pattern of enhancement?", a: "Ring" },
-    { q: "Cause?", a: "Abscess" }
-]},
-
-53: { qs: [
-    { q: "Modality?", a: "CT with contrast" },
-    { q: "Pattern of enhancement?", a: "Serpiginous" },
-    { q: "Cause?", a: "Arteriovenous malformation (AVM)" }
-]},
-
-54: { qs: [
-    { q: "Modality?", a: "Sagittal T1 MRI brain" },
-    { q: "Findings?", a: "Pituitary macroadenoma" }
-]},
-
-55: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Hyperdense mass with calcification and homogeneous enhancement" },
-    { q: "Diagnosis?", a: "Meningioma" }
-]},
-
-56: { qs: [
-    { q: "Modality?", a: "Axial T1 post-contrast MRI" },
-    { q: "Findings?", a: "Homogeneous enhancement" },
-    { q: "Diagnosis?", a: "Meningioma" }
-]},
-
-57: { qs: [
-    { q: "Pattern of enhancement?", a: "Ring" },
-    { q: "Cause?", a: "Abscess" }
-]},
-
-58: { qs: [
-    { q: "Modality?", a: "Axial FLAIR MRI sequence" },
-    { q: "Findings?", a: "Multiple oval hyperintensities around the lateral ventricle (Dawson fingers)" },
-    { q: "Diagnosis?", a: "Multiple sclerosis" }
-]},
-
-59: { qs: [
-    { q: "Modality?", a: "Parasagittal T2 weighted MRI" },
-    { q: "Findings?", a: "Plaques of demyelination as high signal in the white matter" },
-    { q: "Diagnosis?", a: "Multiple sclerosis" }
-]},
-
-60: { qs: [
-    { q: "Modality?", a: "MRI FLAIR sequence" },
-    { q: "Findings?", a: "Dilated lateral ventricles" },
-    { q: "Diagnosis?", a: "Hydrocephalus" }
-]},
-
-61: { qs: [
-    { q: "Modality?", a: "CT" },
-    { q: "Findings?", a: "Mickey mouse appearance" },
-    { q: "Diagnosis?", a: "Hydrocephalus" }
-]},
-
-62: { qs: [
-    { q: "Modality?", a: "Axial T2 MRI" },
-    { q: "Findings?", a: "Dilated ventricles and widening of sulci" },
-    { q: "Diagnosis?", a: "Cerebral atrophy" }
-]},
-
-63: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense, crescentic-shaped area" },
-    { q: "Diagnosis?", a: "Acute subdural hemorrhage" }
-]},
-
-64: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hypodense, crescentic-shaped area" },
-    { q: "Diagnosis?", a: "Chronic subdural hemorrhage" }
-]},
-
-65: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hypo/hyper-dense, crescentic-shaped area" },
-    { q: "Diagnosis?", a: "Acute on chronic subdural hemorrhage" }
-]},
-
-66: { qs: [
-    { q: "Modality?", a: "a: CT brain — b: MRI T1 brain" },
-    { q: "Findings?", a: "Mass effect sign, midline shift" },
-    { q: "Diagnosis?", a: "Subacute subdural hematoma (hemorrhage)" }
-]},
-
-67: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense, lens-shaped" },
-    { q: "Diagnosis?", a: "Epidural hematoma (hemorrhage)" }
-]},
-
-68: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense in cisterns and sulci" },
-    { q: "Diagnosis?", a: "Subarachnoid hemorrhage" }
-]},
-
-69: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense in the parenchyma" },
-    { q: "Diagnosis?", a: "Intracerebral hemorrhage" }
-]},
-
-70: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense in the ventricle" },
-    { q: "Diagnosis?", a: "Intraventricular hemorrhage" }
-]},
-
-71: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "a: Hyperdense MCA sign — b: Hyperdense basilar artery sign" },
-    { q: "Diagnosis?", a: "Early cerebral infarction" }
-]},
-
-72: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Fingerlike projection, vasogenic edema" },
-    { q: "Diagnosis?", a: "Tumor" }
-]},
-
-73: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense parenchyma of infarcted region, cytotoxic edema" },
-    { q: "Diagnosis?", a: "Cerebral hemorrhage" }
-]},
-
-74: { qs: [
-    { q: "Modality?", a: "Sagittal T2 MRI" },
-    { q: "Findings?", a: "Herniated disk at C5-C6" },
-    { q: "Diagnosis?", a: "Cervical disk herniation" }
-]},
-
-75: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Dense vertebra" },
-    { q: "Diagnosis?", a: "Metastases from carcinoma of breast/prostate" }
-]},
-
-76: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Dense, wider vertebra" },
-    { q: "Diagnosis?", a: "Paget's disease" }
-]},
-
-77: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Normal vertebral size, vertical striation" },
-    { q: "Diagnosis?", a: "Hemangioma" }
-]},
-
-78: { qs: [
-    { q: "Modality?", a: "Sagittal T2 MRI" },
-    { q: "Diagnosis?", a: "Syringomyelia" }
-]},
-
-79: { qs: [
-    { q: "Modality?", a: "MRI T2" },
-    { q: "Findings?", a: "Plaque of demyelination" },
-    { q: "Diagnosis?", a: "Multiple sclerosis" }
-]},
-
-80: { qs: [
-    { q: "Modality?", a: "US (right upper quadrant)" },
-    { q: "Findings?", a: "Hepatorenal recess — where intraperitoneal free fluid may accumulate in the supine position" }
-]},
-
-81: { qs: [
-    { q: "Modality?", a: "US (left upper quadrant)" },
-    { q: "Findings?", a: "Anechoic fluid collection visible in the splenorenal recess — In trauma, anechoic fluid collection in a potential space is assumed to be hemorrhage until proven otherwise" }
-]}
-
-}; // end bank
+    "9- Urinary Radiology": [
+        { q: "Which of the following is used in Vesicouretheal reflux?", a: "Micturating cystourethrogram" },
+        { q: "Which modality is used in urethral injury?", a: "Retrograde urethrogram" },
+        { q: "Which structure is seen as triangular hypoechoic areas?", a: "Pyramid" },
+        { q: "Pt in CT showed deposition of calcium in the renal medulla, this may be due to:", a: "Hyperparathyroidism" },
+        { q: "Patient with flank pain, difficulty urination…", a: "Bladder outlet Obstruction" },
+        { q: "In Ultrasound, the kidneys were enlarged and showed multi hypoechoic lesion bilateral?", a: "Autosomal Dominant Polycystic kidney disease" },
+        { q: "Case of 3 years child, CT showed patchy enhancement of the lesion, heterogeneous, area of calcification?", a: "Wilms tumor" },
+        { q: "A 45-year-old patient presents to the emergency department with severe flank pain radiating to the groin associated with hematuria. Which of the following is the best initial imaging modality to confirm the diagnosis?", a: "CT scan of the abdomen and pelvis (non-contrast)" }
+    ],
+    "10- Male Reproductive Radiology": [
+        { q: "Male patient with varicocele, best imaging modality?", a: "US" },
+        { q: "In basis of US if patient come with prostatic cancer, finding?", a: "Peripheral zone mass" },
+        { q: "A patient presents with acute Right scrotal pain associated with fever and vomiting. On clinical examination, elevation of the testis does not relieve the pain, and scratching the medial aspect of the thigh fails to cause elevation of the testis. Ultrasound is performed shown?", a: "Decreased vascularity in Right testis" },
+        { q: "Ectopic testis in the abdomen, best imaging modality?", a: "MRI" },
+        { q: "US Show small non shadowing hyperechoic foci in which case?", a: "Testicular microlithiasis" },
+        { q: "Male after TRUS performed, there are increased total prostate volume, elevated post micturition residual volume, hydronephrosis diagnosis?", a: "Benign prostatic hyperplasia" }
+    ],
+    "11- Female Reproductive Radiology": [
+        { q: "Post-menopausal female patient with vaginal bleeding, which if the following US finding consider to have endometrial cancer?", a: "Widening of endometrial stripe" },
+        { q: "Female After HSG was performed the uterus appears divided with angle more than 105?", a: "Bicornuate uterus" },
+        { q: "44 year old obese female with irregular menstruation US show multiple Small anechoic peripheral cysts 'string of pearls'?", a: "Polycystic ovary syndrome" },
+        { q: "Which of the following is a Benign ovarian mass feature?", a: "Solid component with no vascularity on Doppler" },
+        { q: "Plain film show Tooth component of ovarian mass?", a: "Dermoid cyst" },
+        { q: "Female patient with history of tubal pregnancy, amenorrhea, vaginal bleeding & elevated B-hCG. Best initial imaging?", a: "Transvaginal US" },
+        { q: "Female patient with amenorrhea, vaginal bleeding & elevated B-hCG. US show multiple cysts within large placenta?", a: "Hydatidiform mole" }
+    ]
+};
+
+/* =====================================================
+   FLASHCARDS BANK
+   ===================================================== */
+const flashcardsBank = {
+    "9- Urinary Radiology": [
+        { front: "Why is imaging essential in urology?", back: "Many urinary tract diseases cannot be adequately assessed by physical examination alone." },
+        { front: "What are the main imaging modalities used in urinary tract diseases?", back: "KUB X-ray, IVU, cystogram, MCUG/VCUG, ultrasound, CT, MRI, angiography, radionuclide imaging, and retrograde urethrogram." },
+        { front: "What does KUB stand for?", back: "Kidney, Ureter, and Bladder." },
+        { front: "What is the main role of KUB imaging?", back: "Detection of radiopaque urinary stones." },
+        { front: "What are common indications for KUB?", back: "Hematuria, loin pain, abdominal pain, urinary stones, and abdominal masses." },
+        { front: "What is a major limitation of KUB?", back: "Sensitivity decreases for small stones." },
+        { front: "What is IVU?", back: "An X-ray study of kidneys, ureters, and bladder after intravenous contrast injection." },
+        { front: "What two aspects does IVU assess?", back: "Anatomy and function of the urinary tract." },
+        { front: "What type of contrast is commonly used in IVU?", back: "Low-osmolar nonionic contrast." },
+        { front: "Why is a scout film (KUB) obtained before IVU?", back: "To identify stones before contrast obscures them." },
+        { front: "Which imaging modality has largely replaced IVU?", back: "CT scan." },
+        { front: "What is a cystogram?", back: "Imaging study used to evaluate the urinary bladder after filling it with contrast." },
+        { front: "What are the main indications for cystography?", back: "Cystitis, trauma, tumors, and congenital anomalies." },
+        { front: "How can the bladder be filled for a cystogram?", back: "Via IVU or direct catheterization." },
+        { front: "What does MCUG evaluate?", back: "Functional and anatomical abnormalities of the bladder and urethra." },
+        { front: "What is the most common pediatric indication for MCUG?", back: "Recurrent urinary tract infections (UTIs)." },
+        { front: "Which condition is classically diagnosed by MCUG?", back: "Vesicoureteral reflux (VUR)." },
+        { front: "What is vesicoureteral reflux?", back: "Backward flow of urine from the bladder into the ureters and kidneys." },
+        { front: "What other conditions can MCUG detect?", back: "Posterior urethral valves, stress incontinence, and neurogenic bladder." },
+        { front: "What is the main purpose of a retrograde urethrogram?", back: "Assessment of the urethra." },
+        { front: "How is an RGU performed?", back: "Contrast is injected retrogradely into the urethra and radiographs are taken." },
+        { front: "What is the first-line imaging modality for most urinary tract diseases?", back: "Ultrasound." },
+        { front: "What are the main advantages of ultrasound?", back: "No ionizing radiation and no IV contrast required." },
+        { front: "Which urinary structures can be evaluated by ultrasound?", back: "Kidneys, bladder, ureters, and prostate." },
+        { front: "Can ultrasound differentiate solid from cystic masses?", back: "Yes." },
+        { front: "What is hydronephrosis?", back: "Dilatation of the renal collecting system due to urinary obstruction." },
+        { front: "How do simple cysts appear on ultrasound?", back: "Anechoic (black) with posterior acoustic enhancement." },
+        { front: "What does 'anechoic' mean?", back: "No internal echoes; appears black on ultrasound." },
+        { front: "What does 'hyperechoic' mean?", back: "Brighter than surrounding tissues." },
+        { front: "What does 'hypoechoic' mean?", back: "Darker than surrounding tissues." },
+        { front: "What is the normal adult kidney length on ultrasound?", back: "Approximately 9–12 cm." },
+        { front: "What is the renal sinus?", back: "The central echogenic area containing the collecting system, fat, and vessels." },
+        { front: "Are normal ureters usually visible on ultrasound?", back: "No." },
+        { front: "How should the urinary bladder appear when distended?", back: "Thin-walled with sharply defined margins." },
+        { front: "What is CT KUB primarily used for?", back: "Diagnosis of urolithiasis (urinary stones)." },
+        { front: "Why is CT superior for urinary stones?", back: "It detects both radiopaque and radiolucent stones." },
+        { front: "What is the investigation of choice for ureteric stones?", back: "Non-contrast spiral CT." },
+        { front: "What additional information does CT provide about stones?", back: "Size, location, density, and degree of obstruction." },
+        { front: "What is the major advantage of MRI over CT?", back: "Excellent multiplanar imaging without ionizing radiation." },
+        { front: "What is a major limitation of MRI in urinary imaging?", back: "Calcifications and stones are poorly visualized." },
+        { front: "When is MRI commonly used in urinary tract imaging?", back: "Evaluation of renal artery stenosis and staging bladder/prostate cancers." },
+        { front: "What does renal angiography evaluate?", back: "Renal blood vessels." },
+        { front: "What is a common indication for renal angiography?", back: "Renal artery stenosis." },
+        { front: "What is a horseshoe kidney?", back: "Fusion of the lower poles of both kidneys across the midline." },
+        { front: "Why is a horseshoe kidney clinically important?", back: "Increased risk of trauma and stone formation." },
+        { front: "What is a pelvic kidney?", back: "A kidney located in the pelvis instead of the normal lumbar position." },
+        { front: "What is crossed fused ectopia?", back: "Both kidneys are located on the same side and are usually fused." },
+        { front: "What is a duplicated collecting system?", back: "Presence of two collecting systems draining a kidney." },
+        { front: "Which imaging study best demonstrates vesicoureteral reflux?", back: "MCUG (VCUG)." },
+        { front: "What happens in severe reflux?", back: "Urine reaches the ureters and kidneys causing dilatation." },
+        { front: "What is nephrocalcinosis?", back: "Calcium deposition within the renal parenchyma." },
+        { front: "Which type of nephrocalcinosis is more common?", back: "Medullary nephrocalcinosis." },
+        { front: "What are common causes of nephrocalcinosis?", back: "Hyperparathyroidism, renal tubular acidosis, and medullary sponge kidney." },
+        { front: "What is nephrolithiasis?", back: "Formation of stones within the kidney." },
+        { front: "What are common symptoms of urinary stones?", back: "Flank pain and hematuria." },
+        { front: "What is a staghorn calculus?", back: "A large branching stone occupying the renal pelvis and calyces." },
+        { front: "Which stones are radiolucent on plain X-ray?", back: "Uric acid and xanthine stones." },
+        { front: "How do all renal calculi appear on CT?", back: "High attenuation (hyperdense)." },
+        { front: "How does a stone appear on ultrasound?", back: "Hyperechoic with posterior acoustic shadowing." },
+        { front: "What is the preferred imaging modality for renal abscess?", back: "Contrast-enhanced CT." },
+        { front: "How does a renal abscess appear on CT?", back: "Low-attenuation fluid collection with a thick irregular wall." },
+        { front: "What CT finding strongly suggests abscess formation?", back: "Gas within a cystic or low-attenuation lesion." },
+        { front: "What is the imaging modality of choice for renal trauma?", back: "CT scan." },
+        { front: "What are common causes of renal trauma?", back: "Road traffic accidents and contact sports." },
+        { front: "What are the major presenting features of renal trauma?", back: "Loin pain and hematuria." },
+        { front: "What are examples of low-grade renal injury?", back: "Subcapsular hematoma, contusion, and laceration." },
+        { front: "What are examples of high-grade renal injury?", back: "Renal vascular injury and shattered kidney." },
+        { front: "First-line imaging for urinary tract disease?", back: "Ultrasound." },
+        { front: "Best test for ureteric stones?", back: "Non-contrast spiral CT." },
+        { front: "Best test for vesicoureteral reflux?", back: "MCUG (VCUG)." },
+        { front: "Best imaging for renal trauma?", back: "CT scan." },
+        { front: "Best imaging for renal abscess?", back: "Contrast-enhanced CT." },
+        { front: "Which modality does NOT show calcifications well?", back: "MRI." },
+        { front: "Which modality has no radiation and is first-line?", back: "Ultrasound." },
+        { front: "Best test for urinary stones?", back: "Non-contrast CT KUB." },
+        { front: "Best test for urethral injury?", back: "Retrograde urethrogram." },
+        { front: "Most common fusion anomaly?", back: "Horseshoe kidney." },
+        { front: "Normal renal length?", back: "9–12 cm." },
+        { front: "MRI limitation?", back: "Cannot reliably detect calcifications/stones." },
+        { front: "Most common cause of medullary nephrocalcinosis?", back: "Hyperparathyroidism." },
+        { front: "Only radiolucent urinary stones on X-ray?", back: "Uric acid and xanthine stones." }
+    ],
+    "10- Male Reproductive Radiology": [
+        { front: "What is the imaging modality of choice for most scrotal diseases?", back: "Ultrasound." },
+        { front: "How does Doppler distinguish torsion from infection?", back: "Torsion (↓ flow) vs infection (↑ flow)." },
+        { front: "What is Hydrocele and its US appearance?", back: "Anechoic fluid around the testis." },
+        { front: "What is Varicocele and its US criteria?", back: "Dilated pampiniform plexus >3 mm with venous reflux." },
+        { front: "What does the Whirlpool sign indicate?", back: "Testicular torsion." },
+        { front: "What is the investigation of choice for intra-abdominal undescended testes?", back: "MRI." },
+        { front: "What is the typical US appearance of Seminoma?", back: "Homogeneous hypoechoic mass." },
+        { front: "Where does BPH arise from?", back: "The transitional zone." },
+        { front: "Where does Prostate cancer usually arise?", back: "The peripheral zone." },
+        { front: "What type of metastases does prostate cancer commonly produce?", back: "Osteoblastic bone metastases visible on bone scan." },
+        { front: "What is the first imaging modality for scrotal disorders, and what is the main emergency distinction it must help make?", back: "Ultrasound (US) – with color Doppler. Emergency distinction: testicular torsion (absent/reduced flow) vs. epididymitis/orchitis (increased flow)." },
+        { front: "On Doppler ultrasound, how do you differentiate testicular torsion from epididymo‑orchitis?", back: "Torsion → reduced or absent intratesticular blood flow. Epididymo‑orchitis → increased vascularity (hyperemia)." },
+        { front: "What is the 'whirlpool sign' on scrotal US, and what does it indicate?", back: "Spiral‑like twisting of the spermatic cord. Indicates testicular torsion (pathognomonic finding)." },
+        { front: "A 14‑year‑old boy awakens with acute right scrotal pain. US shows the right testis lying horizontally with slightly reduced flow. What is the most likely diagnosis?", back: "Testicular torsion – the horizontal lie (oblique orientation) is an additional sonographic clue." },
+        { front: "What clinical findings favor testicular torsion over epididymitis? (Name at least 3)", back: "1. Sudden onset, often nocturnal/wakening. 2. Absent cremasteric reflex. 3. Negative Prehn sign (pain not relieved by elevating testis). 4. Peak ages: neonatal period or 10–14 years." },
+        { front: "You suspect testicular torsion with high clinical probability. Should you wait for an ultrasound?", back: "No. Do not delay definitive treatment (surgical detorsion) for diagnostic imaging if clinical suspicion is high – the testis may not survive beyond 6 hours." },
+        { front: "On ultrasound, what findings suggest testicular necrosis from prolonged torsion?", back: "Heterogeneous appearance of testicular parenchyma + absence of blood flow on Doppler." },
+        { front: "What is a hydrocele? How does it appear on ultrasound, and what does 'positive transillumination' mean?", back: "Painless fluid collection between layers of tunica vaginalis. US: anechoic fluid surrounding the testis. Transillumination: light passes through the fluid (positive test) – helps differentiate from solid tumor." },
+        { front: "A patient has a left scrotal swelling that feels like a 'bag of worms' and worsens with Valsalva. What is the diagnosis and the key ultrasound feature?", back: "Varicocele – dilatation of pampiniform plexus veins (>3 mm). US: serpiginous, tubular anechoic structures with venous reflux on Doppler during Valsalva." },
+        { front: "What is the gold standard investigation for acute epididymitis? Describe two typical sonographic findings.", back: "Ultrasound (color Doppler). Findings: 1. Enlarged, hypoechoic epididymis (or testis in orchitis). 2. Markedly increased vascularity (hyperemia). ± reactive hydrocele, scrotal wall thickening." },
+        { front: "A 25‑year‑old man has a painless, firm testicular nodule that does not transilluminate. What is the most likely diagnosis and the next imaging step?", back: "Testicular tumor (most common solid malignancy in men 20–35). Next step: Testicular ultrasound – to confirm intratesticular mass and characterize it." },
+        { front: "On testicular US, describe the typical appearance of seminoma vs. nonseminomatous germ cell tumor.", back: "Seminoma: hypoechoic, homogenous, sharp margins. Nonseminoma: inhomogenous, variable echogenicity, may have cysts or calcifications." },
+        { front: "What is testicular microlithiasis and why is it clinically relevant?", back: "Multiple tiny (1–3 mm) hyperechoic foci ('starry sky' appearance) without shadowing. It is a possible precursor of testicular carcinoma – warrants follow‑up." },
+        { front: "What is the best imaging modality for suspected prostate cancer, and what are its two main advantages?", back: "MRI (T2‑weighted) – preferred modality. Advantages: 1. Detects small peripheral zone lesions (low T2 signal). 2. Assesses extracapsular spread and lymph node metastases." },
+        { front: "Why is transrectal ultrasound (TRUS) performed in prostate disease? Give two indications.", back: "1. Guidance for prostate biopsy (main indication). 2. Assess prostate size and identify small masses when transabdominal US is insufficient." },
+        { front: "A 75‑year‑old man with urinary retention has a prostate volume >30 cc on US. What is the most likely diagnosis, and what secondary findings suggest bladder outlet obstruction?", back: "Benign prostatic hyperplasia (BPH). Secondary signs: elevated post‑void residual (>50 mL), bladder wall thickening/trabeculation, hydronephrosis." },
+        { front: "Where does prostate cancer most commonly metastasize, and what does it look like on a nuclear bone scan?", back: "Metastasizes to skeleton (typically sclerotic/osteoblastic lesions). Bone scan: increased activity (hot spots) at sites of metastasis." },
+        { front: "A non‑palpable testis is suspected to be intra‑abdominal. Ultrasound is inconclusive. What is the next imaging study of choice?", back: "MRI – best for locating non‑palpable intra‑abdominal or inguinal testes." },
+        { front: "What is the clinical significance of prostatic calcifications seen on ultrasound?", back: "Very common in older men. No correlation with BPH symptoms or prostate cancer risk – usually an incidental finding." },
+        { front: "Why is CT not preferred for initial evaluation of prostate cancer? When is it useful?", back: "Poor zonal anatomy and soft‑tissue contrast within the prostate. Useful for: determining local extraprostatic spread and detecting lymph node metastases (and PET‑CT for distant metastases)." }
+    ],
+    "11- Female Reproductive Radiology": [
+        { front: "Best first-line modality in gynecology?", back: "Ultrasound." },
+        { front: "Best modality for local tumor staging?", back: "MRI." },
+        { front: "Best test for tubal patency?", back: "HSG." },
+        { front: "Most accurate first-trimester dating measurement?", back: "CRL." },
+        { front: "Postmenopausal endometrial thickness considered abnormal?", back: "> 5 mm." },
+        { front: "Classic PCOS appearance?", back: "String of pearls." },
+        { front: "Most common benign uterine tumor?", back: "Leiomyoma (Fibroid)." },
+        { front: "Most common site of ectopic pregnancy?", back: "Fallopian tube." },
+        { front: "Classic triad of ectopic pregnancy?", back: "Amenorrhea + Pelvic pain + Vaginal bleeding." },
+        { front: "Placenta previa presentation?", back: "Painless vaginal bleeding." },
+        { front: "What is Hydrosalpinx?", back: "Dilated fluid-filled fallopian tube due to obstruction." },
+        { front: "What are the two primary ultrasound approaches for evaluating the female pelvis, and what bladder preparation is needed for each?", back: "Transabdominal US: requires full bladder (acoustic window). Transvaginal US: better resolution, no full bladder needed; used for endometrial detail and early pregnancy." },
+        { front: "In a postmenopausal woman, what endometrial thickness on transvaginal US is considered abnormal, and what must be excluded?", back: "> 5 mm – abnormal. Must exclude endometrial carcinoma (biopsy indicated)." },
+        { front: "What is the first sonographic sign of pregnancy and when is it visible on transvaginal vs. transabdominal US?", back: "Gestational sac (GS) – an echogenic ring with anechoic center. Transvaginal: 4–5 weeks GA. Transabdominal: 6 weeks GA." },
+        { front: "What is the most accurate measurement of gestational age in the first trimester, and how is it measured?", back: "Crown‑rump length (CRL) – measured from the top of the fetal head to the bottom of the trunk." },
+        { front: "What are the five components of the biophysical profile (BPP) used to assess fetal wellbeing?", back: "1. Amniotic fluid volume 2. Fetal body movements 3. Fetal limb flexion/extension 4. Fetal breathing movements 5. Fetal heart rate (non‑stress test)" },
+        { front: "What is placenta previa, and after which gestational week is the diagnosis clinically significant?", back: "Placenta remains positioned over the lower uterine segment after 36 weeks – risks painless third‑trimester bleeding." },
+        { front: "A lost intrauterine contraceptive device (IUCD) is suspected. What is the first imaging investigation? If not located in the pelvis, what next?", back: "First: ultrasound – IUCD appears as a linear hyperechoic structure. If not in pelvis: plain abdominal X‑ray to rule out uterine perforation/migration." },
+        { front: "What is hysterosalpingography (HSG)? Name its reference indication.", back: "Fluoroscopic imaging after contrast injection into the cervical canal. Reference method for assessing tubal patency (infertility workup)." },
+        { front: "List three absolute contraindications to HSG.", back: "1. Pregnancy (absolute – must have negative β‑hCG) 2. Active pelvic inflammatory disease (acute/subacute PID) 3. Recent uterine or tubal surgery" },
+        { front: "On HSG, what finding indicates a normal patent fallopian tube?", back: "Contrast media spills freely into the peritoneal cavity (seen between bowel loops)." },
+        { front: "A 30‑year‑old with infertility has an HSG showing a single uterine canal with a broad smooth indentation <1 cm at the fundus. What is the diagnosis?", back: "Arcuate uterus – a normal variant; the mild fundal indentation does not usually affect fertility." },
+        { front: "How can septate uterus be distinguished from bicornuate uterus on imaging?", back: "Septate: angle between uterine horns <75°; myometrial septum divides the cavity. Bicornuate: angle >75°; two separate horns with a deep fundal cleft." },
+        { front: "What is hydrosalpinx and how does it appear on HSG?", back: "Distal fallopian tube blockage with fluid‑filled dilation. HSG: tubal dilatation, no contrast spill into peritoneum." },
+        { front: "A young woman presents with hirsutism, obesity, and irregular menses. Ultrasound shows enlarged ovaries with multiple small peripheral follicles. What is the diagnosis and the classic appearance?", back: "Polycystic ovary syndrome (PCOS) – 'string of pearls' sign (subcapsular follicles arranged around the periphery)." },
+        { front: "List three sonographic features that suggest a malignant ovarian mass (vs. benign).", back: "1. Large size, mixed solid‑cystic composition 2. Thick, irregular septations (>3 mm) 3. Vascularity within solid components on Doppler (plus ascites or peritoneal deposits)" },
+        { front: "What is a dermoid cyst (mature cystic teratoma)? Name two characteristic imaging findings.", back: "Benign ovarian germ cell tumor containing fat, hair, teeth, calcifications. Imaging: fat‑density component on CT; calcified teeth on plain film or CT; shadowing echogenic solid nodule on US." },
+        { front: "A 35‑year‑old woman has menorrhagia and a palpable pelvic mass. Ultrasound shows a well‑circumscribed hypoechoic solid mass in the myometrium. What is the most likely diagnosis?", back: "Uterine leiomyoma (fibroid) – common benign tumor of reproductive age." },
+        { front: "What is the best imaging modality to assess the local extent of cervical or endometrial carcinoma before surgery?", back: "MRI (T2‑weighted) – accurately shows tumor invasion beyond the cervix or into the myometrium." },
+        { front: "A woman with first‑trimester bleeding, amenorrhea, and unilateral adnexal pain has an empty uterus on ultrasound. A gestational sac with embryo is seen in the adnexa. What is the diagnosis?", back: "Ectopic pregnancy (most common site: fallopian tube). Rupture risk → surgical emergency." },
+        { front: "What is the single most reliable sonographic sign of an ectopic pregnancy?", back: "Extra‑uterine gestational sac containing a live embryo (or yolk sac) seen in the adnexa, with an empty uterine cavity." }
+    ],
+    "12- Brain & Skull imaging": [
+        { front: "What is the rare current indication for plain skull radiographs?", back: "Skeletal surveys in suspected non‑accidental injury (child abuse) or myeloma." },
+        { front: "On a plain skull X‑ray, what does a linear lucency paralleling the sagittal suture represent?", back: "A cranial vault fracture." },
+        { front: "What are the three main imaging findings of sinusitis on CT?", back: "1. Opacification 2. Mucosal thickening 3. Air‑fluid levels (Also: soft tissue swelling)" },
+        { front: "Why are plain X‑rays of the sinuses no longer recommended as a first‑line investigation?", back: "Limited sensitivity and specificity; CT is preferred." },
+        { front: "What is the routine slice thickness for a non‑contrast CT brain, and for the pituitary?", back: "Brain: 10 mm. Pituitary: 5 mm or less." },
+        { front: "Define intra‑axial vs. extra‑axial brain lesions.", back: "Intra‑axial: within brain parenchyma (grey/white matter). Extra‑axial: involving meninges, extracerebral spaces, or skull vault." },
+        { front: "List four signs of mass effect on CT brain.", back: "1. Effacement of cortical sulci 2. Compression of ventricle 3. Shift of midline structures 4. Transtentorial herniation" },
+        { front: "What does 'ring enhancement' on CT/MRI typically suggest? (Give three possibilities)", back: "Central necrosis with peripheral enhancement – 1. Abscess 2. High‑grade glioma (glioblastoma) 3. Large metastasis" },
+        { front: "On T2‑weighted MRI, what is the signal intensity of CSF? On T1‑weighted?", back: "T2: BRIGHT (hyperintense). T1: BLACK (hypointense)." },
+        { front: "Which MRI sequence is most sensitive for detecting acute ischemic stroke within minutes of onset?", back: "Diffusion‑weighted imaging (DWI) – shows bright signal (restricted diffusion)." },
+        { front: "A patient presents with sudden focal deficit. What is the first CT question to answer before considering thrombolysis?", back: "Exclude intracranial hemorrhage (blood is hyperdense on non‑contrast CT)." },
+        { front: "What is a watershed (border‑zone) infarct?", back: "Infarct in the region between the territories of two major cerebral arteries (e.g., ACA/MCA or MCA/PCA) – often due to hypoperfusion." },
+        { front: "Name the four types of brain tumors by cell of origin (gliomas arise from which cells)?", back: "Gliomas arise from: Astrocytes, Oligodendrocytes, Ependymal cells. Other major categories: metastases, meningiomas, pituitary tumors, germ cell tumors." },
+        { front: "On CT, a solitary, irregular, low‑attenuation lesion with mass effect is most likely what?", back: "Glioma (e.g., astrocytoma or glioblastoma)." },
+        { front: "Which glioma is classically associated with intralesional calcifications on CT?", back: "Oligodendroglioma." },
+        { front: "Describe the 'butterfly glioma' appearance on MRI.", back: "Bilateral enhancement involving both frontal lobes and crossing the corpus callosum – typical of glioblastoma multiforme." },
+        { front: "What is the gold standard imaging modality for pituitary adenomas? How are they sized?", back: "MRI sella with IV contrast. Microadenoma: <1 cm. Macroadenoma: >1 cm." },
+        { front: "A suprasellar calcified cyst with solid and cystic components in a child is most likely what tumor?", back: "Craniopharyngioma (bimodal peaks: 5–14 years and 50–75 years)." },
+        { front: "What is the 'dural tail sign' and which tumor is it characteristic of?", back: "Linear enhancement extending from a dural‑based mass along the meninges. Characteristic of meningioma." },
+        { front: "On MRI, what are Dawson fingers and which disease are they associated with?", back: "Finger‑like radial extensions of periventricular hyperintense plaques (T2/FLAIR). Pathognomonic for multiple sclerosis (MS)." },
+        { front: "A ring‑enhancing lesion in the posterior fossa of an adult should be considered what until proven otherwise?", back: "Metastasis (especially from lung, breast, or melanoma)." },
+        { front: "How can MRI help differentiate a cerebral abscess from a necrotic metastasis?", back: "History is key (e.g., otitis media, dental infection). Both can show ring enhancement, but abscess often has smooth, thin, uniform wall and restricted diffusion on DWI (pus = high signal)." },
+        { front: "How is hydrocephalus imaged in infants <18 months vs. older children/adults?", back: "Infants (<18 mo): Ultrasound via open anterior fontanelle. Older children/adults: CT or MRI." },
+        { front: "On CT/MRI, what distinguishes communicating from non‑communicating hydrocephalus?", back: "Communicating: all ventricles dilated (impaired CSF absorption). Non‑communicating: ventricles upstream of obstruction dilated (e.g., aqueductal stenosis → dilated lateral + third, normal fourth)." },
+        { front: "What does 'Mickey Mouse ventricles' refer to?", back: "Enlargement of both lateral ventricles and the third ventricle – seen in hydrocephalus (ears = lateral ventricles, head = third ventricle)." },
+        { front: "What are the imaging signs of cerebral atrophy in an elderly patient?", back: "Enlarged ventricles (ventriculomegaly), Prominent cerebral sulci, Narrowing of gyri (hydrocephalus ex vacuo)" }
+    ]
+};
 
 /* ==========================================================
    State
    ========================================================== */
-let order = [];
+let mode = 'exam'; // 'exam' or 'flash'
+let selectedLecture = null;
+let currentQuestions = [];
 let idx = 0;
-let timerRef = null;
-let startTs = 0;
-let elapsed = 0;
-let answeredMap = {};
+let answeredSet = new Set();
+
+// Flashcard state
+let currentFlashcards = [];
+let fcIdx = 0;
 
 /* ==========================================================
    Utilities
@@ -1109,339 +711,259 @@ function shuffle(arr) {
     return a;
 }
 
-function fmt(sec) {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-}
-
-/* ==========================================================
-   Normal Exam Start
-   ========================================================== */
-function startExam() {
-    const nums = [];
-    for (let i = 1; i <= CONFIG.totalImages; i++) nums.push(i);
-    order = shuffle(nums);
-    idx = 0;
-    answeredMap = {};
-
+function hideAllScreens() {
     document.getElementById('welcomeScreen').style.display = 'none';
-    document.getElementById('specialScreen').classList.remove('visible');
+    document.getElementById('selectionScreen').classList.remove('visible');
+    document.getElementById('examScreen').innerHTML = '';
+    document.getElementById('flashScreen').style.display = 'none';
     document.getElementById('doneScreen').classList.remove('visible');
-    document.getElementById('topBar').classList.add('visible');
-    document.getElementById('progressTrack').classList.add('visible');
-
-    renderQuestion();
+    document.getElementById('topBar').classList.remove('visible');
+    document.getElementById('progressTrack').classList.remove('visible');
 }
 
 /* ==========================================================
-   Special Exam
+   Selection Screen Logic
    ========================================================== */
-function openSpecialExam() {
-    document.getElementById('welcomeScreen').style.display = 'none';
-    document.getElementById('specialScreen').classList.add('visible');
-    generateCheckboxes();
-    updateSelectedCount();
+function openSelection(type) {
+    mode = type;
+    hideAllScreens();
+    
+    selectedLecture = null;
+    document.getElementById('selectionScreen').classList.add('visible');
+    
+    if (mode === 'exam') {
+        document.getElementById('selectionTitle').textContent = 'Past Questions';
+        document.getElementById('startExamBtn').style.display = 'inline-flex';
+        document.getElementById('startFlashBtn').style.display = 'none';
+        renderLectures(bank);
+    } else {
+        document.getElementById('selectionTitle').textContent = 'Flashcards';
+        document.getElementById('startExamBtn').style.display = 'none';
+        document.getElementById('startFlashBtn').style.display = 'inline-flex';
+        renderLectures(flashcardsBank);
+    }
+    checkStartBtn();
 }
 
 function backToWelcome() {
-    document.getElementById('specialScreen').classList.remove('visible');
+    hideAllScreens();
     document.getElementById('welcomeScreen').style.display = 'flex';
 }
 
-function generateCheckboxes() {
-    const grid = document.getElementById('checkboxGrid');
-    grid.innerHTML = '';
-    for (let i = 1; i <= CONFIG.totalImages; i++) {
-        grid.innerHTML += `
-        <label class="cb-item">
-            <input type="checkbox" id="cb${i}" value="${i}" onchange="updateSelectedCount()">
-            <span>${i}</span>
+function renderLectures(dataObj) {
+    const grid = document.getElementById('lectureGrid');
+    let lectures = Object.keys(dataObj);
+    
+    let html = `
+        <label class="chip-btn">
+            <input type="radio" name="lecture" value="random" onchange="selectLecture('random')">
+            <span><i class="fas fa-shuffle" style="margin-right:5px"></i> All (Random)</span>
+        </label>
+    `;
+    
+    lectures.forEach(lec => {
+        html += `
+        <label class="chip-btn">
+            <input type="radio" name="lecture" value="${lec}" onchange="selectLecture('${lec}')">
+            <span>${lec}</span>
         </label>`;
-    }
+    });
+    
+    grid.innerHTML = html;
 }
 
-function updateSelectedCount() {
-    const count = document.querySelectorAll('.cb-item input:checked').length;
-    document.getElementById('selectedCount').textContent = count + ' question' + (count !== 1 ? 's' : '') + ' selected';
-    document.getElementById('startSpecialBtn').disabled = count === 0;
+function selectLecture(val) {
+    selectedLecture = val;
+    checkStartBtn();
 }
 
-function selectClearAll(action) {
-    document.querySelectorAll('.cb-item input').forEach(cb => {
-        cb.checked = action === 'select';
-    });
-    updateSelectedCount();
-}
-
-function applyRange() {
-    const input = document.getElementById('rangeInput').value.trim();
-    if (!input) return;
-
-    const nums = new Set();
-    const parts = input.split(',');
-
-    parts.forEach(part => {
-        part = part.trim();
-        if (part.includes('-')) {
-            const bounds = part.split('-').map(s => parseInt(s.trim()));
-            if (bounds.length === 2 && !isNaN(bounds[0]) && !isNaN(bounds[1])) {
-                const start = Math.max(1, Math.min(bounds[0], bounds[1]));
-                const end = Math.min(CONFIG.totalImages, Math.max(bounds[0], bounds[1]));
-                for (let i = start; i <= end; i++) nums.add(i);
-            }
-        } else {
-            const n = parseInt(part);
-            if (!isNaN(n) && n >= 1 && n <= CONFIG.totalImages) nums.add(n);
-        }
-    });
-
-    // Check the matching boxes
-    nums.forEach(n => {
-        const cb = document.getElementById('cb' + n);
-        if (cb) cb.checked = true;
-    });
-
-    updateSelectedCount();
-}
-
-function startSpecialExam() {
-    const selected = [];
-    document.querySelectorAll('.cb-item input:checked').forEach(cb => {
-        selected.push(parseInt(cb.value));
-    });
-    if (selected.length === 0) return;
-
-    order = shuffle(selected);
-    idx = 0;
-    answeredMap = {};
-
-    document.getElementById('specialScreen').classList.remove('visible');
-    document.getElementById('doneScreen').classList.remove('visible');
-    document.getElementById('topBar').classList.add('visible');
-    document.getElementById('progressTrack').classList.add('visible');
-
-    renderQuestion();
+function checkStartBtn() {
+    const btn = document.getElementById(mode === 'exam' ? 'startExamBtn' : 'startFlashBtn');
+    btn.disabled = !selectedLecture;
 }
 
 /* ==========================================================
-   Render Question (uses order.length for dynamic total)
+   Exam Logic
    ========================================================== */
+function startPractice() {
+    currentQuestions = [];
+    gatherQuestions(bank);
+    
+    if (currentQuestions.length === 0) return;
+    currentQuestions = shuffle(currentQuestions);
+    idx = 0;
+    answeredSet = new Set();
+
+    hideAllScreens();
+    document.getElementById('topBar').classList.add('visible');
+    document.getElementById('progressTrack').classList.add('visible');
+    renderQuestion();
+}
+
+function gatherQuestions(dataObj) {
+    if (selectedLecture === 'random') {
+        Object.keys(dataObj).forEach(lec => {
+            dataObj[lec].forEach(q => currentQuestions.push({ ...q, lecture: lec }));
+        });
+    } else {
+        const qs = dataObj[selectedLecture] || [];
+        qs.forEach(q => currentQuestions.push({ ...q, lecture: selectedLecture }));
+    }
+}
+
 function renderQuestion() {
-    const totalQ = order.length;
-    const imgNum = order[idx];
-    const data = bank[imgNum] || { qs: [{ q: "Modality?", a: "—" }, { q: "Findings?", a: "—" }, { q: "Diagnosis?", a: "—" }] };
+    const totalQ = currentQuestions.length;
+    const qData = currentQuestions[idx];
     const remaining = totalQ - idx;
-    const isAnswered = answeredMap[imgNum] !== undefined;
+    const isAnswered = answeredSet.has(idx);
 
     document.getElementById('remainCount').textContent = 'Remaining: ' + remaining;
-    document.getElementById('progressFill').style.width =
-        ((idx / totalQ) * 100) + '%';
+    document.getElementById('progressFill').style.width = ((idx / totalQ) * 100) + '%';
 
-    let noteHTML = '';
-    if (data.note) {
-        noteHTML = `<div class="clinical-note"><i class="fas fa-user-md"></i><span>${data.note}</span></div>`;
-    }
-
-    let qHTML = '';
-    data.qs.forEach((item, i) => {
-        const revealedClass = isAnswered ? ' revealed' : '';
-        qHTML += `
-        <div class="q-item${revealedClass}" id="qi${i}">
-            <div class="q-text">${i + 1}. ${item.q}</div>
-            <div class="a-text"${isAnswered ? ' style="display:block"' : ''}><i class="fas fa-check-circle" style="margin-right:5px"></i>${item.a}</div>
-        </div>`;
-    });
-
+    const revealedClass = isAnswered ? ' revealed' : '';
+    const answerDisplay = isAnswered ? ' style="display:block"' : '';
     const isFirst = idx === 0;
     const isLast = idx >= totalQ - 1;
-    const nextLabel = isLast ? 'Finish Exam' : 'Next Question';
+    const nextLabel = isLast ? 'Finish' : 'Next';
     const nextIcon = isLast ? 'fa-flag-checkered' : 'fa-arrow-right';
-
-    const timeBadgeStyle = isAnswered ? 'show' : '';
-    const timeBadgeText = isAnswered ? 'Time spent: ' + fmt(answeredMap[imgNum]) : '';
 
     document.getElementById('examScreen').innerHTML = `
     <div class="q-card">
-        <div class="img-wrap" onclick="openZoom('${CONFIG.imageFolder}${imgNum}${CONFIG.imageExt}')">
-            <img id="mainImg"
-                 src="${CONFIG.imageFolder}${imgNum}${CONFIG.imageExt}"
-                 alt="Image ${imgNum}">
-            <span class="badge">Image ${imgNum}</span>
-            <span class="zoom-hint"><i class="fas fa-search-plus"></i> Click to zoom</span>
-        </div>
-        <div class="img-divider"></div>
         <div class="q-body">
-            <div class="section-title"><i class="fas fa-clipboard-question"></i> Questions</div>
-            ${noteHTML}
-            ${qHTML}
+            <div class="lecture-tag"><i class="fas fa-book" style="margin-right:5px"></i>${qData.lecture}</div>
+            <div class="q-item${revealedClass}" id="qi0">
+                <div class="q-text">${qData.q}</div>
+                <div class="a-text"${answerDisplay}><i class="fas fa-check-circle" style="margin-right:5px"></i>${qData.a}</div>
+            </div>
         </div>
         <div class="actions">
-            <button class="btn btn-outline" id="btnPrev" onclick="goPrev()"${isFirst ? ' disabled' : ''}>
+            <button class="btn btn-outline btn-sm" onclick="goPrev()"${isFirst ? ' disabled' : ''}>
                 <i class="fas fa-arrow-left"></i> Previous
             </button>
 
-            ${isAnswered ? `
-                <div class="time-badge ${timeBadgeStyle}">
-                    <i class="fas fa-stopwatch"></i>
-                    <span>${timeBadgeText}</span>
-                </div>
-            ` : `
-                <button class="btn btn-navy" id="btnReveal" onclick="revealAnswers()">
-                    <i class="fas fa-eye"></i> Show Answers
+            ${isAnswered ? '' : `
+                <button class="btn btn-navy btn-sm" id="btnReveal" onclick="revealAnswer()">
+                    <i class="fas fa-eye"></i> Show Answer
                 </button>
             `}
 
-            <button class="btn btn-green" id="btnNext" onclick="goNext()"${isAnswered ? '' : ' style="display:none"'}>
+            <button class="btn btn-green btn-sm" id="btnNext" onclick="goNext()"${isAnswered ? '' : ' style="display:none"'}>
                 ${nextLabel} <i class="fas ${nextIcon}"></i>
             </button>
         </div>
     </div>`;
-
-    const mainImg = document.getElementById('mainImg');
-    mainImg.onerror = function () {
-        this.style.display = 'none';
-        const wrap = this.parentElement;
-        wrap.insertAdjacentHTML('beforeend', `
-            <div class="img-placeholder">
-                <i class="fas fa-image"></i>
-                <span>Image ${imgNum} not found</span>
-                <small>${CONFIG.imageFolder}${imgNum}${CONFIG.imageExt}</small>
-            </div>
-        `);
-        wrap.onclick = null;
-        wrap.style.cursor = 'default';
-    };
-
-    if (isAnswered) {
-        clearInterval(timerRef);
-        document.getElementById('liveTimer').textContent = fmt(answeredMap[imgNum]);
-    } else {
-        startTimer();
-    }
 }
 
-/* ==========================================================
-   Timer
-   ========================================================== */
-function startTimer() {
-    clearInterval(timerRef);
-    startTs = Date.now();
-    elapsed = 0;
-    document.getElementById('liveTimer').textContent = '00:00';
-    timerRef = setInterval(() => {
-        elapsed = Math.floor((Date.now() - startTs) / 1000);
-        document.getElementById('liveTimer').textContent = fmt(elapsed);
-    }, 500);
-}
-
-function stopTimer() {
-    clearInterval(timerRef);
-    elapsed = Math.floor((Date.now() - startTs) / 1000);
-}
-
-/* ==========================================================
-   Reveal Answers
-   ========================================================== */
-function revealAnswers() {
-    stopTimer();
-    const imgNum = order[idx];
-    answeredMap[imgNum] = elapsed;
-
-    document.querySelectorAll('.q-item').forEach(el => el.classList.add('revealed'));
-
-    const btnReveal = document.getElementById('btnReveal');
-    const timeBadgeHTML = `
-        <div class="time-badge show">
-            <i class="fas fa-stopwatch"></i>
-            <span>Time spent: ${fmt(elapsed)}</span>
-        </div>
-    `;
-    btnReveal.insertAdjacentHTML('afterend', timeBadgeHTML);
-    btnReveal.remove();
-
+function revealAnswer() {
+    answeredSet.add(idx);
+    document.getElementById('qi0').classList.add('revealed');
+    document.querySelector('.a-text').style.display = 'block';
+    document.getElementById('btnReveal').remove();
     document.getElementById('btnNext').style.display = 'inline-flex';
 }
 
-/* ==========================================================
-   Navigation
-   ========================================================== */
 function goNext() {
     idx++;
-    if (idx >= order.length) {
-        showDone();
-    } else {
-        renderQuestion();
-    }
+    if (idx >= currentQuestions.length) showDone();
+    else renderQuestion();
 }
 
 function goPrev() {
-    if (idx > 0) {
-        idx--;
-        renderQuestion();
+    if (idx > 0) { idx--; renderQuestion(); }
+}
+
+/* ==========================================================
+   Flashcards Logic
+   ========================================================== */
+function startFlashcards() {
+    currentFlashcards = [];
+    gatherFlashcards();
+    if (currentFlashcards.length === 0) return;
+    
+    currentFlashcards = shuffle(currentFlashcards);
+    fcIdx = 0;
+
+    hideAllScreens();
+    document.getElementById('topBar').classList.add('visible');
+    document.getElementById('progressTrack').classList.add('visible');
+    document.getElementById('flashScreen').style.display = 'block';
+    
+    renderFlashcard();
+}
+
+function gatherFlashcards() {
+    if (selectedLecture === 'random') {
+        Object.keys(flashcardsBank).forEach(lec => {
+            flashcardsBank[lec].forEach(fc => currentFlashcards.push({ ...fc, lecture: lec }));
+        });
+    } else {
+        const fcs = flashcardsBank[selectedLecture] || [];
+        fcs.forEach(fc => currentFlashcards.push({ ...fc, lecture: selectedLecture }));
     }
+}
+
+function renderFlashcard() {
+    const totalQ = currentFlashcards.length;
+    const fcData = currentFlashcards[fcIdx];
+    const remaining = totalQ - fcIdx;
+
+    document.getElementById('remainCount').textContent = 'Remaining: ' + remaining;
+    document.getElementById('progressFill').style.width = ((fcIdx / totalQ) * 100) + '%';
+    
+    document.getElementById('flashFrontText').innerHTML = `<div style="margin-bottom:10px; font-size:12px; color:var(--muted); font-weight:700;">${fcData.lecture}</div>` + fcData.front;
+    document.getElementById('flashBackText').textContent = fcData.back;
+    document.getElementById('flashCounter').textContent = (fcIdx + 1) + ' / ' + totalQ;
+
+    // Reset flip
+    document.getElementById('flashInner').classList.remove('flipped');
+}
+
+function flipCard() {
+    document.getElementById('flashInner').classList.toggle('flipped');
+}
+
+function nextFlashcard() {
+    if (fcIdx < currentFlashcards.length - 1) {
+        fcIdx++;
+        renderFlashcard();
+    } else {
+        showDone();
+    }
+}
+
+function prevFlashcard() {
+    if (fcIdx > 0) {
+        fcIdx--;
+        renderFlashcard();
+    }
+}
+
+function shuffleFlashcards() {
+    currentFlashcards = shuffle(currentFlashcards);
+    fcIdx = 0;
+    renderFlashcard();
+}
+
+function backToWelcomeFromFlash() {
+    hideAllScreens();
+    document.getElementById('welcomeScreen').style.display = 'flex';
 }
 
 /* ==========================================================
    Done Screen
    ========================================================== */
 function showDone() {
-    document.getElementById('examScreen').innerHTML = '';
-    document.getElementById('topBar').classList.remove('visible');
-    document.getElementById('progressTrack').classList.remove('visible');
-    clearInterval(timerRef);
-
-    const timeData = [];
-    for (let i = 1; i <= CONFIG.totalImages; i++) {
-        if (answeredMap[i] !== undefined) {
-            timeData.push({ imgNum: i, seconds: answeredMap[i] });
-        }
-    }
-    timeData.sort((a, b) => a.imgNum - b.imgNum);
-
-    const totalSec = timeData.reduce((s, t) => s + t.seconds, 0);
-    document.getElementById('totalTimeText').textContent = 'Total Time: ' + fmt(totalSec);
-
-    let rows = '';
-    timeData.forEach(t => {
-        rows += `<div class="tt-row"><span>Image ${t.imgNum}</span><span class="tt-time">${fmt(t.seconds)}</span></div>`;
-    });
-
-    document.getElementById('timeTable').innerHTML = `
-        <div class="tt-head"><span>Image</span><span>Time</span></div>
-        <div class="tt-body">${rows}</div>
-    `;
-
+    hideAllScreens();
+    document.getElementById('doneText').textContent = mode === 'exam' ? 
+        `You reviewed ${currentQuestions.length} questions.` : 
+        `You reviewed ${currentFlashcards.length} flashcards.`;
     document.getElementById('doneScreen').classList.add('visible');
 }
 
-function restartExam() {
-    document.getElementById('doneScreen').classList.remove('visible');
-    document.getElementById('welcomeScreen').style.display = 'flex';
+function restart() {
+    backToWelcome();
 }
 
-/* ==========================================================
-   Zoom
-   ========================================================== */
-function openZoom(src) {
-    document.getElementById('zoomImg').src = src;
-    document.getElementById('zoomOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeZoom() {
-    document.getElementById('zoomOverlay').classList.remove('open');
-    document.body.style.overflow = '';
-}
-
-document.getElementById('zoomOverlay').addEventListener('click', function (e) {
-    if (e.target === this || e.target.tagName === 'IMG') closeZoom();
-});
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeZoom();
-});
-
-document.getElementById('totalDisplay').textContent = CONFIG.totalImages;
 </script>
 
 </body>
