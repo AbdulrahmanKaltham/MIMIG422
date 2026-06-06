@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSPE MIMIG 422 (2026)</title>
+    <title>MIMIG 422 (2026)</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -18,1431 +18,235 @@
             --text: #1e293b;
             --muted: #64748b;
             --green: #0d9460;
-            --green-bg: #ecfdf5;
+            --green-hover: #0b7d52;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--white);
             color: var(--text);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         body::before {
             content: '';
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(ellipse at 10% 90%, rgba(17,34,64,0.02) 0%, transparent 55%),
-                radial-gradient(ellipse at 90% 10%, rgba(17,34,64,0.02) 0%, transparent 55%);
+                radial-gradient(ellipse at 10% 90%, rgba(17,34,64,0.025) 0%, transparent 55%),
+                radial-gradient(ellipse at 90% 10%, rgba(17,34,64,0.025) 0%, transparent 55%);
             pointer-events: none;
             z-index: 0;
         }
-        .top-bar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 60px;
-            background: var(--navy);
-            color: var(--white);
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            z-index: 200;
-            box-shadow: 0 3px 18px rgba(17,34,64,0.18);
-        }
-        .top-bar.visible { display: flex; }
-        .top-bar .brand { font-size: 15px; font-weight: 700; white-space: nowrap; }
-        .pill {
-            background: rgba(255,255,255,0.12);
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .pill i { font-size: 12px; }
-        .progress-track {
-            position: fixed;
-            top: 60px; left: 0; right: 0;
-            height: 4px;
-            background: var(--navy-light);
-            z-index: 199;
-            display: none;
-        }
-        .progress-track.visible { display: block; }
-        .progress-fill {
-            height: 100%;
-            background: var(--navy);
-            transition: width .45s ease;
-            width: 0;
-        }
-        .container {
-            max-width: 880px;
-            margin: 0 auto;
-            padding: 24px 18px 60px;
+
+        .home {
             position: relative;
             z-index: 1;
-        }
-        .welcome {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 108px);
             text-align: center;
-            padding-top: 40px;
+            padding: 40px 24px;
+            max-width: 620px;
+            width: 100%;
         }
-        .welcome .icon-box {
-            width: 88px; height: 88px;
-            background: var(--navy);
-            border-radius: 22px;
-            display: grid; place-items: center;
-            margin-bottom: 28px;
-            box-shadow: 0 8px 30px rgba(17,34,64,0.2);
-        }
-        .welcome .icon-box i { font-size: 38px; color: var(--white); }
-        .welcome h1 { font-size: 34px; font-weight: 900; color: var(--navy); }
-        .welcome .subtitle { font-size: 20px; font-weight: 300; color: var(--muted); margin-top: 4px; }
-        .info-row { display: flex; gap: 14px; margin: 32px 0; flex-wrap: wrap; justify-content: center; }
-        .info-chip {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px 24px;
-            text-align: center;
-            min-width: 120px;
-        }
-        .info-chip .val { font-size: 26px; font-weight: 900; color: var(--navy); }
-        .info-chip .lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
-        .welcome .desc { color: var(--muted); font-size: 14px; line-height: 1.9; max-width: 520px; margin-bottom: 28px; }
-        .btn {
-            border: none;
-            padding: 13px 36px;
-            font-size: 15px;
-            font-weight: 700;
-            font-family: 'Inter', sans-serif;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all .2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .btn:active { transform: scale(.97); }
-        .btn-navy { background: var(--navy); color: var(--white); }
-        .btn-navy:hover { background: var(--navy-hover); box-shadow: 0 6px 20px rgba(17,34,64,0.28); }
-        .btn-green { background: var(--green); color: var(--white); }
-        .btn-green:hover { background: #0b7d52; box-shadow: 0 6px 20px rgba(13,148,96,0.25); }
-        .btn-outline {
-            background: transparent;
-            color: var(--navy);
-            border: 2px solid var(--border);
-        }
-        .btn-outline:hover:not(:disabled) {
-            border-color: var(--navy);
-            background: var(--navy-light);
-        }
-        .btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none !important; }
-        .btn-sm { padding: 8px 18px; font-size: 13px; }
-        .welcome-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 
-        /* ===== Special Exam Screen ===== */
-        .special-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 30px;
+        .icon-box {
+            width: 96px;
+            height: 96px;
+            background: var(--navy);
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 30px rgba(17,34,64,0.2);
+            animation: floatIn .6s ease;
         }
-        .special-screen.visible { display: flex; }
-        .special-screen h2 {
-            font-size: 24px;
+
+        .icon-box i {
+            font-size: 42px;
+            color: var(--white);
+        }
+
+        @keyframes floatIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h1 {
+            font-size: 38px;
             font-weight: 900;
             color: var(--navy);
-            margin-bottom: 6px;
+            line-height: 1.1;
+            margin-bottom: 4px;
+            animation: fadeUp .5s ease .1s both;
         }
-        .special-screen .sub {
-            font-size: 14px;
-            color: var(--muted);
-            margin-bottom: 24px;
-        }
-        .range-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .range-group input {
-            padding: 10px 16px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            width: 220px;
-            text-align: center;
-            transition: border-color .2s;
-            outline: none;
-        }
-        .range-group input:focus { border-color: var(--navy); }
-        .range-group input::placeholder { color: #b0b8c9; font-weight: 400; }
-        .grid-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(9, 1fr);
-            gap: 8px;
-            margin-bottom: 28px;
-            width: 100%;
-            max-width: 540px;
-        }
-        .cb-item {
-            position: relative;
-            cursor: pointer;
-        }
-        .cb-item input {
-            position: absolute;
-            opacity: 0;
-            width: 0; height: 0;
-        }
-        .cb-item span {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            aspect-ratio: 1;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--muted);
-            transition: all .15s;
-            user-select: none;
-        }
-        .cb-item:hover span { border-color: var(--navy); color: var(--navy); }
-        .cb-item input:checked + span {
-            background: var(--navy);
-            border-color: var(--navy);
-            color: var(--white);
-        }
-        .selected-count {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--navy);
-            margin-bottom: 16px;
-        }
-        .special-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
 
-        /* ===== Question Card ===== */
-        .q-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-top: 16px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.05);
-            animation: slideUp .4s ease;
+        .subtitle {
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--muted);
+            margin-bottom: 12px;
+            animation: fadeUp .5s ease .2s both;
         }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(24px); }
+
+        .dept {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--navy);
+            opacity: .5;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 48px;
+            animation: fadeUp .5s ease .3s both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .img-wrap {
-            background: var(--white);
-            position: relative;
+
+        .cards {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 280px;
-            max-height: 540px;
-            cursor: zoom-in;
-            padding: 8px;
+            gap: 20px;
+            width: 100%;
+            animation: fadeUp .5s ease .4s both;
         }
-        .img-wrap img {
-            max-width: 100%;
-            max-height: 520px;
-            object-fit: contain;
-            display: block;
-        }
-        .img-wrap .badge {
-            position: absolute;
-            top: 10px; right: 10px;
-            background: rgba(17,34,64,0.7);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .img-wrap .zoom-hint {
-            position: absolute;
-            bottom: 10px; right: 10px;
-            background: rgba(17,34,64,0.6);
-            backdrop-filter: blur(4px);
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
+
+        .card-link {
+            text-decoration: none;
+            flex: 1;
             display: flex;
-            align-items: center;
-            gap: 5px;
         }
-        .img-placeholder {
+
+        .card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 18px;
+            padding: 36px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 48px 20px;
-            color: #6b7280;
-        }
-        .img-placeholder i { font-size: 40px; color: #374151; }
-        .img-placeholder span { font-size: 14px; }
-        .img-placeholder small { font-size: 11px; color: #9ca3af; }
-        .img-divider { height: 1px; background: var(--border); }
-        .q-body { padding: 24px; }
-        .q-body .section-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--navy);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .clinical-note {
-            background: #fef9c3;
-            border: 1px solid #fde68a;
-            border-radius: 10px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #92400e;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-        .clinical-note i { margin-top: 2px; flex-shrink: 0; }
-        .q-item {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-            transition: border-color .3s, background .3s;
-        }
-        .q-item:last-child { margin-bottom: 0; }
-        .q-item .q-text { font-size: 15px; font-weight: 600; color: var(--text); }
-        .q-item .a-text {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1.5px dashed var(--border);
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--green);
-            animation: fadeAnswer .35s ease;
-        }
-        .q-item.revealed .a-text { display: block; }
-        .q-item.revealed { border-color: var(--green); background: var(--green-bg); }
-        @keyframes fadeAnswer {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .actions {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 12px;
-            padding: 18px 24px 22px;
-            flex-wrap: wrap;
-            border-top: 1px solid var(--border);
-        }
-        .time-badge {
-            display: none;
-            align-items: center;
-            gap: 6px;
-            background: var(--navy-light);
-            color: var(--navy);
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 700;
-            animation: fadeAnswer .35s ease;
-        }
-        .time-badge.show { display: inline-flex; }
-        .zoom-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,0.95);
-            z-index: 500;
-            place-items: center;
-            cursor: zoom-out;
-            animation: fadeIn .25s ease;
-        }
-        .zoom-overlay.open { display: grid; }
-        .zoom-overlay img {
-            max-width: 95vw;
-            max-height: 95vh;
-            object-fit: contain;
-        }
-        .zoom-close {
-            position: absolute;
-            top: 16px; right: 16px;
-            color: var(--navy);
-            font-size: 28px;
+            gap: 16px;
+            width: 100%;
+            min-height: 220px;
+            transition: all .25s ease;
             cursor: pointer;
-            background: rgba(17,34,64,0.08);
-            width: 44px; height: 44px;
-            border-radius: 50%;
+        }
+
+        .card:hover {
+            border-color: var(--navy);
+            box-shadow: 0 8px 30px rgba(17,34,64,0.12);
+            transform: translateY(-4px);
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
             display: grid;
             place-items: center;
-            transition: background .2s;
         }
-        .zoom-close:hover { background: rgba(17,34,64,0.18); }
-        @keyframes fadeIn {
-            from { opacity: 0; } to { opacity: 1; }
-        }
-        .done {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 108px);
-            text-align: center;
-            padding-top: 40px;
-        }
-        .done.visible { display: flex; }
-        .done .check-circle {
-            width: 88px; height: 88px;
-            background: var(--green);
-            border-radius: 50%;
-            display: grid; place-items: center;
-            margin-bottom: 24px;
-            animation: popIn .5s cubic-bezier(.17,.67,.35,1.3);
-        }
-        @keyframes popIn {
-            from { transform: scale(0); } to { transform: scale(1); }
-        }
-        .done .check-circle i { font-size: 42px; color: var(--white); }
-        .done h2 { font-size: 28px; font-weight: 900; color: var(--navy); }
-        .done .total-time { font-size: 17px; color: var(--muted); margin-top: 4px; margin-bottom: 28px; }
-        .time-table {
-            width: 100%;
-            max-width: 480px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 28px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        }
-        .time-table .tt-head {
+
+        .card-icon.ospe {
             background: var(--navy);
+        }
+
+        .card-icon.ospe i {
+            font-size: 28px;
             color: var(--white);
-            padding: 12px 18px;
-            font-size: 14px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
         }
-        .time-table .tt-body { max-height: 360px; overflow-y: auto; }
-        .time-table .tt-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 18px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
+
+        .card-icon.endblock {
+            background: var(--green);
         }
-        .time-table .tt-row:last-child { border-bottom: none; }
-        .time-table .tt-row:nth-child(even) { background: var(--bg); }
-        .time-table .tt-row .tt-time { font-weight: 700; color: var(--navy); }
-        .btn-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-        @media (max-width: 640px) {
-            .top-bar { padding: 0 12px; }
-            .top-bar .brand { font-size: 12px; }
-            .pill { font-size: 11px; padding: 4px 10px; }
-            .welcome h1 { font-size: 26px; }
-            .info-chip { min-width: 90px; padding: 14px 16px; }
-            .info-chip .val { font-size: 22px; }
-            .q-body { padding: 18px 14px; }
-            .actions { padding: 14px; gap: 8px; }
-            .btn { padding: 11px 20px; font-size: 13px; }
-            .checkbox-grid { grid-template-columns: repeat(6, 1fr); gap: 6px; }
-            .cb-item span { font-size: 12px; }
-            .range-group input { width: 180px; }
+
+        .card-icon.endblock i {
+            font-size: 28px;
+            color: var(--white);
         }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--navy);
+        }
+
+        .card-desc {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .card:hover .card-icon.ospe {
+            box-shadow: 0 4px 16px rgba(17,34,64,0.3);
+        }
+
+        .card:hover .card-icon.endblock {
+            box-shadow: 0 4px 16px rgba(13,148,96,0.3);
+        }
+
+        .footer {
+            margin-top: 56px;
+            font-size: 12px;
+            color: var(--border);
+            font-weight: 600;
+            letter-spacing: 1px;
+            animation: fadeUp .5s ease .5s both;
+        }
+
+        @media (max-width: 540px) {
+            .cards {
+                flex-direction: column;
+            }
+            h1 { font-size: 30px; }
+            .subtitle { font-size: 17px; }
+            .card { padding: 28px 20px; min-height: 180px; }
+        }
     </style>
 </head>
 <body>
 
-    <header class="top-bar" id="topBar">
-        <span class="brand">OSPE MIMIG 422 (2026)</span>
-        <div class="pill">
-            <i class="fas fa-stopwatch"></i>
-            <span id="liveTimer">00:00</span>
+    <div class="home">
+        <div class="icon-box">
+            <i class="fas fa-x-ray"></i>
         </div>
-        <div class="pill">
-            <i class="fas fa-list-ol"></i>
-            <span id="remainCount">Remaining: 81</span>
-        </div>
-    </header>
 
-    <div class="progress-track" id="progressTrack">
-        <div class="progress-fill" id="progressFill"></div>
+        <h1>MIMIG 422</h1>
+        <div class="subtitle">2026</div>
+        <div class="dept">Medical Imaging</div>
+
+        <div class="cards">
+            <a class="card-link" href="https://abdulrahmankaltham.github.io/MIMIG422/OSPE">
+                <div class="card">
+                    <div class="card-icon ospe">
+                        <i class="fas fa-clipboard-question"></i>
+                    </div>
+                    <div class="card-title">OSPE</div>
+                    <div class="card-desc">Objective Structured Practical Examination</div>
+                </div>
+            </a>
+
+            <a class="card-link" href="https://abdulrahmankaltham.github.io/MIMIG422/End-Block">
+                <div class="card">
+                    <div class="card-icon endblock">
+                        <i class="fas fa-file-circle-check"></i>
+                    </div>
+                    <div class="card-title">End Block</div>
+                    <div class="card-desc">End of Block Examination</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">MIMIG 422</div>
     </div>
-
-    <div class="zoom-overlay" id="zoomOverlay">
-        <div class="zoom-close" onclick="closeZoom()"><i class="fas fa-times"></i></div>
-        <img id="zoomImg" src="" alt="Zoomed">
-    </div>
-
-    <div class="container">
-
-        <!-- ===== Welcome ===== -->
-        <section class="welcome" id="welcomeScreen">
-            <div class="icon-box"><i class="fas fa-x-ray"></i></div>
-            <h1>OSPE MIMIG 422</h1>
-            <div class="subtitle">2026</div>
-            <div class="info-row">
-                <div class="info-chip">
-                    <div class="val" id="totalDisplay">81</div>
-                    <div class="lbl">Questions</div>
-                </div>
-                <div class="info-chip">
-                    <div class="val"><i class="fas fa-shuffle" style="font-size:22px"></i></div>
-                    <div class="lbl">Random Order</div>
-                </div>
-                <div class="info-chip">
-                    <div class="val"><i class="fas fa-stopwatch" style="font-size:22px"></i></div>
-                    <div class="lbl">Timer</div>
-                </div>
-            </div>
-            <p class="desc">
-                Radiology images are displayed in a random order each time.
-                Answer on your paper, then click "Show Answers" to reveal
-                the correct answers and see how much time you spent on each question.
-            </p>
-            <div class="welcome-btns">
-                <button class="btn btn-navy" onclick="startExam()">
-                    <i class="fas fa-play"></i> Start Exam
-                </button>
-                <button class="btn btn-outline" onclick="openSpecialExam()">
-                    <i class="fas fa-list-check"></i> Special Exam
-                </button>
-            </div>
-        </section>
-
-        <!-- ===== Special Exam Selection ===== -->
-        <section class="special-screen" id="specialScreen">
-            <h2>Special Exam</h2>
-            <p class="sub">Select the questions you want to include</p>
-
-            <div class="range-group">
-                <input type="text" id="rangeInput" placeholder="e.g. 5-67  or  1,3,5-10">
-                <button class="btn btn-navy btn-sm" onclick="applyRange()">
-                    <i class="fas fa-check"></i> Apply
-                </button>
-            </div>
-
-            <div class="grid-controls">
-                <button class="btn btn-outline btn-sm" onclick="selectClearAll('select')">
-                    <i class="fas fa-check-double"></i> Select All
-                </button>
-                <button class="btn btn-outline btn-sm" onclick="selectClearAll('clear')">
-                    <i class="fas fa-times"></i> Clear
-                </button>
-            </div>
-
-            <div class="checkbox-grid" id="checkboxGrid"></div>
-
-            <div class="selected-count" id="selectedCount">0 questions selected</div>
-
-            <div class="special-btns">
-                <button class="btn btn-outline" onclick="backToWelcome()">
-                    <i class="fas fa-arrow-left"></i> Back
-                </button>
-                <button class="btn btn-green" id="startSpecialBtn" onclick="startSpecialExam()" disabled>
-                    <i class="fas fa-play"></i> Start Exam
-                </button>
-            </div>
-        </section>
-
-        <!-- ===== Exam ===== -->
-        <main id="examScreen"></main>
-
-        <!-- ===== Done ===== -->
-        <section class="done" id="doneScreen">
-            <div class="check-circle"><i class="fas fa-check"></i></div>
-            <h2>Exam Complete</h2>
-            <div class="total-time" id="totalTimeText"></div>
-            <div class="time-table" id="timeTable"></div>
-            <div class="btn-row">
-                <button class="btn btn-navy" onclick="restartExam()">
-                    <i class="fas fa-redo"></i> Restart Exam
-                </button>
-            </div>
-        </section>
-
-    </div>
-
-<script>
-const CONFIG = {
-    imageFolder: 'images/',
-    imageExt: '.jpg',
-    totalImages: 81
-};
-
-/* =====================================================
-   QUESTIONS BANK
-   ===================================================== */
-const bank = {
-
-1: { qs: [
-    { q: "Modality?", a: "Radionuclide bone scan 99mTc" },
-    { q: "Findings?", a: "Increased uptake in femur" },
-    { q: "Diagnosis?", a: "Paget's disease" }
-]},
-
-2: { qs: [
-    { q: "Modality?", a: "Mammogram" },
-    { q: "Findings?", a: "Microcalcification" },
-    { q: "Diagnosis?", a: "Carcinoma of breast" }
-]},
-
-3: { qs: [
-    { q: "Modality?", a: "Mammogram" },
-    { q: "Findings?", a: "High density lesion with irregular margins" },
-    { q: "Diagnosis?", a: "Carcinoma of breast" }
-]},
-
-4: { qs: [
-    { q: "Modality?", a: "Double contrast enema" },
-    { q: "Contrast used?", a: "Barium & Air" }
-]},
-
-5: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Diagnosis?", a: "Pneumonia" },
-    { q: "Which lobe?", a: "Right lower lobe" }
-]},
-
-6: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Diagnosis?", a: "Lung collapse" },
-    { q: "Which lobe?", a: "Right middle lobe" },
-    { q: "Sign?", a: "Silhouette sign (obliteration of lower right cardiac border)" }
-]},
-
-7: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Left hemithorax opaque with air bronchograms, no volume loss, no shifting of trachea or heart" },
-    { q: "Diagnosis?", a: "Pneumonia" }
-]},
-
-8: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Left hemithorax opaque without air bronchograms, decreased volume, shifting of trachea to left" },
-    { q: "Diagnosis?", a: "Lung collapse" }
-]},
-
-9: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Meniscus sign" },
-    { q: "Diagnosis?", a: "Large bilateral pleural effusion" },
-    { q: "Cause?", a: "Congestive heart failure" }
-]},
-
-10: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Air within pleural cavity" },
-    { q: "Diagnosis?", a: "Pneumothorax" }
-]},
-
-11: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Air under diaphragm" },
-    { q: "Diagnosis?", a: "Pneumoperitoneum" },
-    { q: "Cause?", a: "Perforation of bowel" }
-]},
-
-12: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Split pleural sign (lenticular, biconvex)" },
-    { q: "Diagnosis?", a: "Lung empyema" }
-]},
-
-13: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Fluid surrounding the heart" },
-    { q: "Diagnosis?", a: "Pericardial effusion" }
-]},
-
-14: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Cardiomegaly with globular (flask-shaped) heart" },
-    { q: "Diagnosis?", a: "Pericardial effusion" },
-    { q: "Cause?", a: "Viral pericarditis" }
-]},
-
-15: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Straight/convex left heart border, double density of right cardiac border, elevated left main bronchus, splaying of carina" },
-    { q: "Diagnosis?", a: "Mitral stenosis" }
-]},
-
-16: { qs: [
-    { q: "Modality?", a: "Chest Plain X-Ray" },
-    { q: "Findings?", a: "Batwing or butterfly appearance" },
-    { q: "Diagnosis?", a: "Pulmonary edema" }
-]},
-
-17: { qs: [
-    { q: "Modality?", a: "Plain X-Ray abdomen" },
-    { q: "Findings?", a: "Coffee bean sign" },
-    { q: "Diagnosis?", a: "Sigmoid volvulus" }
-]},
-
-18: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Calcification within the pancreas" },
-    { q: "Diagnosis?", a: "Chronic pancreatitis" }
-]},
-
-19: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Ruptured spleen" }
-]},
-
-20: { qs: [
-    { q: "Modality?", a: "Barium swallow" },
-    { q: "Findings?", a: "Contrast filled the pouch protruding from esophageal wall" },
-    { q: "Diagnosis?", a: "Zenker's diverticulum" }
-]},
-
-21: { qs: [
-    { q: "Modality?", a: "Single contrast barium enema" },
-    { q: "Findings?", a: "Haustra are lost, narrow & short colon (rigid tube)" },
-    { q: "Diagnosis?", a: "Ulcerative colitis" }
-]},
-
-22: { qs: [
-    { q: "Modality?", a: "Double contrast barium enema" },
-    { q: "Findings?", a: "Narrow & short colon (lead pipe appearance)" },
-    { q: "Diagnosis?", a: "Ulcerative colitis" }
-]},
-
-23: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Hyperechoic with posterior acoustic shadow" },
-    { q: "Diagnosis?", a: "Cholelithiasis" }
-]},
-
-24: { qs: [
-    { q: "Modality?", a: "Radionuclide bone scan" },
-    { q: "Findings?", a: "Increased uptake in multiple areas" },
-    { q: "Diagnosis?", a: "Metastasis" }
-]},
-
-25: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Distal radius fracture with ulnar head dislocation and first metacarpal fracture" },
-    { q: "Diagnosis?", a: "Galeazzi fracture" }
-]},
-
-26: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Proximal ulna fracture with anterior radial head dislocation" },
-    { q: "Diagnosis?", a: "Monteggia fracture" }
-]},
-
-27: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Lightbulb appearance" },
-    { q: "Diagnosis?", a: "Posterior shoulder dislocation" },
-    { q: "Cause?", a: "Electric shock or epileptic seizure" }
-]},
-
-28: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Fracture of humeral neck and greater tuberosity" }
-]},
-
-29: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Impacted femoral neck fracture" }
-]},
-
-30: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Intertrochanteric fracture" }
-]},
-
-31: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Growth plate is widened" },
-    { q: "Diagnosis?", a: "Rickets" }
-]},
-
-32: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Decreased density, expansile lytic lesion, eccentric in the metaphysis" },
-    { q: "Diagnosis?", a: "Giant cell tumor" }
-]},
-
-33: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Rugger jersey spine" },
-    { q: "Diagnosis?", a: "Renal osteodystrophy" }
-]},
-
-34: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Bamboo spine" },
-    { q: "Diagnosis?", a: "Ankylosing spondylitis" }
-]},
-
-35: { qs: [
-    { q: "Modality?", a: "Abdominal CT with contrast" },
-    { q: "Findings?", a: "Hyperdense calculi in left ureter with dilated renal pelvis" }
-]},
-
-36: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Bilateral enlargement of kidney with multiple hypodense cysts" },
-    { q: "Diagnosis?", a: "Autosomal dominant polycystic kidney disease" }
-]},
-
-37: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Round hyperechoic lesion at the upper pole with dorsal acoustic shadow" },
-    { q: "Diagnosis?", a: "Kidney stone" }
-]},
-
-38: { qs: [
-    { q: "Modality?", a: "CT without contrast" },
-    { q: "Diagnosis?", a: "Kidney stone" }
-]},
-
-39: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Hyperdense stone, acoustic shadow" },
-    { q: "Diagnosis?", a: "Bladder calculus" }
-]},
-
-40: { qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Anechoic (fluid surrounding normal testicle)" },
-    { q: "Diagnosis?", a: "Hydrocele" }
-]},
-
-41: { note: "A man presents with testicular atrophy", qs: [
-    { q: "Modality?", a: "Ultrasound" },
-    { q: "Findings?", a: "Dilated pampiniform veins" },
-    { q: "Diagnosis?", a: "Varicocele" }
-]},
-
-42: { note: "A man presents with testicular atrophy", qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Venous reflux" },
-    { q: "Diagnosis?", a: "Varicocele" }
-]},
-
-43: { qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Edematous epididymis with increased vascularity in epididymis" },
-    { q: "Diagnosis?", a: "Epididymitis" }
-]},
-
-44: { qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Edematous epididymis with increased vascularity in testes" },
-    { q: "Diagnosis?", a: "Orchitis" }
-]},
-
-45: { qs: [
-    { q: "Modality?", a: "Doppler ultrasound" },
-    { q: "Findings?", a: "Decreased vascularity in right testis" },
-    { q: "Diagnosis?", a: "Testicular torsion" }
-]},
-
-46: { qs: [
-    { q: "Modality?", a: "HSG" },
-    { q: "Diagnosis?", a: "Bilateral hydrosalpinx" }
-]},
-
-47: { qs: [
-    { q: "Modality?", a: "HSG" },
-    { q: "Diagnosis?", a: "Unilateral hydrosalpinx" }
-]},
-
-48: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Well-developed teeth within the cyst" },
-    { q: "Diagnosis?", a: "Dermoid cyst" }
-]},
-
-49: { qs: [
-    { q: "Modality?", a: "Transvaginal ultrasound" },
-    { q: "Findings?", a: "Enlarged ovaries with multiple anechoic cysts" },
-    { q: "Diagnosis?", a: "Polycystic ovarian syndrome (PCOS)" }
-]},
-
-50: { qs: [
-    { q: "Modality?", a: "Sagittal T1 MRI brain" },
-    { q: "Findings?", a: "Agenesis of corpus callosum" }
-]},
-
-51: { qs: [
-    { q: "Modality?", a: "CT with contrast" },
-    { q: "Pattern of enhancement?", a: "Homogeneous" },
-    { q: "Cause?", a: "Meningioma" }
-]},
-
-52: { qs: [
-    { q: "Modality?", a: "CT with contrast" },
-    { q: "Pattern of enhancement?", a: "Ring" },
-    { q: "Cause?", a: "Abscess" }
-]},
-
-53: { qs: [
-    { q: "Modality?", a: "CT with contrast" },
-    { q: "Pattern of enhancement?", a: "Serpiginous" },
-    { q: "Cause?", a: "Arteriovenous malformation (AVM)" }
-]},
-
-54: { qs: [
-    { q: "Modality?", a: "Sagittal T1 MRI brain" },
-    { q: "Findings?", a: "Pituitary macroadenoma" }
-]},
-
-55: { qs: [
-    { q: "Modality?", a: "CT scan" },
-    { q: "Findings?", a: "Hyperdense mass with calcification and homogeneous enhancement" },
-    { q: "Diagnosis?", a: "Meningioma" }
-]},
-
-56: { qs: [
-    { q: "Modality?", a: "Axial T1 post-contrast MRI" },
-    { q: "Findings?", a: "Homogeneous enhancement" },
-    { q: "Diagnosis?", a: "Meningioma" }
-]},
-
-57: { qs: [
-    { q: "Pattern of enhancement?", a: "Ring" },
-    { q: "Cause?", a: "Abscess" }
-]},
-
-58: { qs: [
-    { q: "Modality?", a: "Axial FLAIR MRI sequence" },
-    { q: "Findings?", a: "Multiple oval hyperintensities around the lateral ventricle (Dawson fingers)" },
-    { q: "Diagnosis?", a: "Multiple sclerosis" }
-]},
-
-59: { qs: [
-    { q: "Modality?", a: "Parasagittal T2 weighted MRI" },
-    { q: "Findings?", a: "Plaques of demyelination as high signal in the white matter" },
-    { q: "Diagnosis?", a: "Multiple sclerosis" }
-]},
-
-60: { qs: [
-    { q: "Modality?", a: "MRI FLAIR sequence" },
-    { q: "Findings?", a: "Dilated lateral ventricles" },
-    { q: "Diagnosis?", a: "Hydrocephalus" }
-]},
-
-61: { qs: [
-    { q: "Modality?", a: "CT" },
-    { q: "Findings?", a: "Mickey mouse appearance" },
-    { q: "Diagnosis?", a: "Hydrocephalus" }
-]},
-
-62: { qs: [
-    { q: "Modality?", a: "Axial T2 MRI" },
-    { q: "Findings?", a: "Dilated ventricles and widening of sulci" },
-    { q: "Diagnosis?", a: "Cerebral atrophy" }
-]},
-
-63: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense, crescentic-shaped area" },
-    { q: "Diagnosis?", a: "Acute subdural hemorrhage" }
-]},
-
-64: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hypodense, crescentic-shaped area" },
-    { q: "Diagnosis?", a: "Chronic subdural hemorrhage" }
-]},
-
-65: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hypo/hyper-dense, crescentic-shaped area" },
-    { q: "Diagnosis?", a: "Acute on chronic subdural hemorrhage" }
-]},
-
-66: { qs: [
-    { q: "Modality?", a: "a: CT brain — b: MRI T1 brain" },
-    { q: "Findings?", a: "Mass effect sign, midline shift" },
-    { q: "Diagnosis?", a: "Subacute subdural hematoma (hemorrhage)" }
-]},
-
-67: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense, lens-shaped" },
-    { q: "Diagnosis?", a: "Epidural hematoma (hemorrhage)" }
-]},
-
-68: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense in cisterns and sulci" },
-    { q: "Diagnosis?", a: "Subarachnoid hemorrhage" }
-]},
-
-69: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense in the parenchyma" },
-    { q: "Diagnosis?", a: "Intracerebral hemorrhage" }
-]},
-
-70: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense in the ventricle" },
-    { q: "Diagnosis?", a: "Intraventricular hemorrhage" }
-]},
-
-71: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "a: Hyperdense MCA sign — b: Hyperdense basilar artery sign" },
-    { q: "Diagnosis?", a: "Early cerebral infarction" }
-]},
-
-72: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Fingerlike projection, vasogenic edema" },
-    { q: "Diagnosis?", a: "Tumor" }
-]},
-
-73: { qs: [
-    { q: "Modality?", a: "CT brain" },
-    { q: "Findings?", a: "Hyperdense parenchyma of infarcted region, cytotoxic edema" },
-    { q: "Diagnosis?", a: "Cerebral hemorrhage" }
-]},
-
-74: { qs: [
-    { q: "Modality?", a: "Sagittal T2 MRI" },
-    { q: "Findings?", a: "Herniated disk at C5-C6" },
-    { q: "Diagnosis?", a: "Cervical disk herniation" }
-]},
-
-75: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Dense vertebra" },
-    { q: "Diagnosis?", a: "Metastases from carcinoma of breast/prostate" }
-]},
-
-76: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Dense, wider vertebra" },
-    { q: "Diagnosis?", a: "Paget's disease" }
-]},
-
-77: { qs: [
-    { q: "Modality?", a: "Plain X-Ray" },
-    { q: "Findings?", a: "Normal vertebral size, vertical striation" },
-    { q: "Diagnosis?", a: "Hemangioma" }
-]},
-
-78: { qs: [
-    { q: "Modality?", a: "Sagittal T2 MRI" },
-    { q: "Diagnosis?", a: "Syringomyelia" }
-]},
-
-79: { qs: [
-    { q: "Modality?", a: "MRI T2" },
-    { q: "Findings?", a: "Plaque of demyelination" },
-    { q: "Diagnosis?", a: "Multiple sclerosis" }
-]},
-
-80: { qs: [
-    { q: "Modality?", a: "US (right upper quadrant)" },
-    { q: "Findings?", a: "Hepatorenal recess — where intraperitoneal free fluid may accumulate in the supine position" }
-]},
-
-81: { qs: [
-    { q: "Modality?", a: "US (left upper quadrant)" },
-    { q: "Findings?", a: "Anechoic fluid collection visible in the splenorenal recess — In trauma, anechoic fluid collection in a potential space is assumed to be hemorrhage until proven otherwise" }
-]}
-
-}; // end bank
-
-/* ==========================================================
-   State
-   ========================================================== */
-let order = [];
-let idx = 0;
-let timerRef = null;
-let startTs = 0;
-let elapsed = 0;
-let answeredMap = {};
-
-/* ==========================================================
-   Utilities
-   ========================================================== */
-function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-function fmt(sec) {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-}
-
-/* ==========================================================
-   Normal Exam Start
-   ========================================================== */
-function startExam() {
-    const nums = [];
-    for (let i = 1; i <= CONFIG.totalImages; i++) nums.push(i);
-    order = shuffle(nums);
-    idx = 0;
-    answeredMap = {};
-
-    document.getElementById('welcomeScreen').style.display = 'none';
-    document.getElementById('specialScreen').classList.remove('visible');
-    document.getElementById('doneScreen').classList.remove('visible');
-    document.getElementById('topBar').classList.add('visible');
-    document.getElementById('progressTrack').classList.add('visible');
-
-    renderQuestion();
-}
-
-/* ==========================================================
-   Special Exam
-   ========================================================== */
-function openSpecialExam() {
-    document.getElementById('welcomeScreen').style.display = 'none';
-    document.getElementById('specialScreen').classList.add('visible');
-    generateCheckboxes();
-    updateSelectedCount();
-}
-
-function backToWelcome() {
-    document.getElementById('specialScreen').classList.remove('visible');
-    document.getElementById('welcomeScreen').style.display = 'flex';
-}
-
-function generateCheckboxes() {
-    const grid = document.getElementById('checkboxGrid');
-    grid.innerHTML = '';
-    for (let i = 1; i <= CONFIG.totalImages; i++) {
-        grid.innerHTML += `
-        <label class="cb-item">
-            <input type="checkbox" id="cb${i}" value="${i}" onchange="updateSelectedCount()">
-            <span>${i}</span>
-        </label>`;
-    }
-}
-
-function updateSelectedCount() {
-    const count = document.querySelectorAll('.cb-item input:checked').length;
-    document.getElementById('selectedCount').textContent = count + ' question' + (count !== 1 ? 's' : '') + ' selected';
-    document.getElementById('startSpecialBtn').disabled = count === 0;
-}
-
-function selectClearAll(action) {
-    document.querySelectorAll('.cb-item input').forEach(cb => {
-        cb.checked = action === 'select';
-    });
-    updateSelectedCount();
-}
-
-function applyRange() {
-    const input = document.getElementById('rangeInput').value.trim();
-    if (!input) return;
-
-    const nums = new Set();
-    const parts = input.split(',');
-
-    parts.forEach(part => {
-        part = part.trim();
-        if (part.includes('-')) {
-            const bounds = part.split('-').map(s => parseInt(s.trim()));
-            if (bounds.length === 2 && !isNaN(bounds[0]) && !isNaN(bounds[1])) {
-                const start = Math.max(1, Math.min(bounds[0], bounds[1]));
-                const end = Math.min(CONFIG.totalImages, Math.max(bounds[0], bounds[1]));
-                for (let i = start; i <= end; i++) nums.add(i);
-            }
-        } else {
-            const n = parseInt(part);
-            if (!isNaN(n) && n >= 1 && n <= CONFIG.totalImages) nums.add(n);
-        }
-    });
-
-    // Check the matching boxes
-    nums.forEach(n => {
-        const cb = document.getElementById('cb' + n);
-        if (cb) cb.checked = true;
-    });
-
-    updateSelectedCount();
-}
-
-function startSpecialExam() {
-    const selected = [];
-    document.querySelectorAll('.cb-item input:checked').forEach(cb => {
-        selected.push(parseInt(cb.value));
-    });
-    if (selected.length === 0) return;
-
-    order = shuffle(selected);
-    idx = 0;
-    answeredMap = {};
-
-    document.getElementById('specialScreen').classList.remove('visible');
-    document.getElementById('doneScreen').classList.remove('visible');
-    document.getElementById('topBar').classList.add('visible');
-    document.getElementById('progressTrack').classList.add('visible');
-
-    renderQuestion();
-}
-
-/* ==========================================================
-   Render Question (uses order.length for dynamic total)
-   ========================================================== */
-function renderQuestion() {
-    const totalQ = order.length;
-    const imgNum = order[idx];
-    const data = bank[imgNum] || { qs: [{ q: "Modality?", a: "—" }, { q: "Findings?", a: "—" }, { q: "Diagnosis?", a: "—" }] };
-    const remaining = totalQ - idx;
-    const isAnswered = answeredMap[imgNum] !== undefined;
-
-    document.getElementById('remainCount').textContent = 'Remaining: ' + remaining;
-    document.getElementById('progressFill').style.width =
-        ((idx / totalQ) * 100) + '%';
-
-    let noteHTML = '';
-    if (data.note) {
-        noteHTML = `<div class="clinical-note"><i class="fas fa-user-md"></i><span>${data.note}</span></div>`;
-    }
-
-    let qHTML = '';
-    data.qs.forEach((item, i) => {
-        const revealedClass = isAnswered ? ' revealed' : '';
-        qHTML += `
-        <div class="q-item${revealedClass}" id="qi${i}">
-            <div class="q-text">${i + 1}. ${item.q}</div>
-            <div class="a-text"${isAnswered ? ' style="display:block"' : ''}><i class="fas fa-check-circle" style="margin-right:5px"></i>${item.a}</div>
-        </div>`;
-    });
-
-    const isFirst = idx === 0;
-    const isLast = idx >= totalQ - 1;
-    const nextLabel = isLast ? 'Finish Exam' : 'Next Question';
-    const nextIcon = isLast ? 'fa-flag-checkered' : 'fa-arrow-right';
-
-    const timeBadgeStyle = isAnswered ? 'show' : '';
-    const timeBadgeText = isAnswered ? 'Time spent: ' + fmt(answeredMap[imgNum]) : '';
-
-    document.getElementById('examScreen').innerHTML = `
-    <div class="q-card">
-        <div class="img-wrap" onclick="openZoom('${CONFIG.imageFolder}${imgNum}${CONFIG.imageExt}')">
-            <img id="mainImg"
-                 src="${CONFIG.imageFolder}${imgNum}${CONFIG.imageExt}"
-                 alt="Image ${imgNum}">
-            <span class="badge">Image ${imgNum}</span>
-            <span class="zoom-hint"><i class="fas fa-search-plus"></i> Click to zoom</span>
-        </div>
-        <div class="img-divider"></div>
-        <div class="q-body">
-            <div class="section-title"><i class="fas fa-clipboard-question"></i> Questions</div>
-            ${noteHTML}
-            ${qHTML}
-        </div>
-        <div class="actions">
-            <button class="btn btn-outline" id="btnPrev" onclick="goPrev()"${isFirst ? ' disabled' : ''}>
-                <i class="fas fa-arrow-left"></i> Previous
-            </button>
-
-            ${isAnswered ? `
-                <div class="time-badge ${timeBadgeStyle}">
-                    <i class="fas fa-stopwatch"></i>
-                    <span>${timeBadgeText}</span>
-                </div>
-            ` : `
-                <button class="btn btn-navy" id="btnReveal" onclick="revealAnswers()">
-                    <i class="fas fa-eye"></i> Show Answers
-                </button>
-            `}
-
-            <button class="btn btn-green" id="btnNext" onclick="goNext()"${isAnswered ? '' : ' style="display:none"'}>
-                ${nextLabel} <i class="fas ${nextIcon}"></i>
-            </button>
-        </div>
-    </div>`;
-
-    const mainImg = document.getElementById('mainImg');
-    mainImg.onerror = function () {
-        this.style.display = 'none';
-        const wrap = this.parentElement;
-        wrap.insertAdjacentHTML('beforeend', `
-            <div class="img-placeholder">
-                <i class="fas fa-image"></i>
-                <span>Image ${imgNum} not found</span>
-                <small>${CONFIG.imageFolder}${imgNum}${CONFIG.imageExt}</small>
-            </div>
-        `);
-        wrap.onclick = null;
-        wrap.style.cursor = 'default';
-    };
-
-    if (isAnswered) {
-        clearInterval(timerRef);
-        document.getElementById('liveTimer').textContent = fmt(answeredMap[imgNum]);
-    } else {
-        startTimer();
-    }
-}
-
-/* ==========================================================
-   Timer
-   ========================================================== */
-function startTimer() {
-    clearInterval(timerRef);
-    startTs = Date.now();
-    elapsed = 0;
-    document.getElementById('liveTimer').textContent = '00:00';
-    timerRef = setInterval(() => {
-        elapsed = Math.floor((Date.now() - startTs) / 1000);
-        document.getElementById('liveTimer').textContent = fmt(elapsed);
-    }, 500);
-}
-
-function stopTimer() {
-    clearInterval(timerRef);
-    elapsed = Math.floor((Date.now() - startTs) / 1000);
-}
-
-/* ==========================================================
-   Reveal Answers
-   ========================================================== */
-function revealAnswers() {
-    stopTimer();
-    const imgNum = order[idx];
-    answeredMap[imgNum] = elapsed;
-
-    document.querySelectorAll('.q-item').forEach(el => el.classList.add('revealed'));
-
-    const btnReveal = document.getElementById('btnReveal');
-    const timeBadgeHTML = `
-        <div class="time-badge show">
-            <i class="fas fa-stopwatch"></i>
-            <span>Time spent: ${fmt(elapsed)}</span>
-        </div>
-    `;
-    btnReveal.insertAdjacentHTML('afterend', timeBadgeHTML);
-    btnReveal.remove();
-
-    document.getElementById('btnNext').style.display = 'inline-flex';
-}
-
-/* ==========================================================
-   Navigation
-   ========================================================== */
-function goNext() {
-    idx++;
-    if (idx >= order.length) {
-        showDone();
-    } else {
-        renderQuestion();
-    }
-}
-
-function goPrev() {
-    if (idx > 0) {
-        idx--;
-        renderQuestion();
-    }
-}
-
-/* ==========================================================
-   Done Screen
-   ========================================================== */
-function showDone() {
-    document.getElementById('examScreen').innerHTML = '';
-    document.getElementById('topBar').classList.remove('visible');
-    document.getElementById('progressTrack').classList.remove('visible');
-    clearInterval(timerRef);
-
-    const timeData = [];
-    for (let i = 1; i <= CONFIG.totalImages; i++) {
-        if (answeredMap[i] !== undefined) {
-            timeData.push({ imgNum: i, seconds: answeredMap[i] });
-        }
-    }
-    timeData.sort((a, b) => a.imgNum - b.imgNum);
-
-    const totalSec = timeData.reduce((s, t) => s + t.seconds, 0);
-    document.getElementById('totalTimeText').textContent = 'Total Time: ' + fmt(totalSec);
-
-    let rows = '';
-    timeData.forEach(t => {
-        rows += `<div class="tt-row"><span>Image ${t.imgNum}</span><span class="tt-time">${fmt(t.seconds)}</span></div>`;
-    });
-
-    document.getElementById('timeTable').innerHTML = `
-        <div class="tt-head"><span>Image</span><span>Time</span></div>
-        <div class="tt-body">${rows}</div>
-    `;
-
-    document.getElementById('doneScreen').classList.add('visible');
-}
-
-function restartExam() {
-    document.getElementById('doneScreen').classList.remove('visible');
-    document.getElementById('welcomeScreen').style.display = 'flex';
-}
-
-/* ==========================================================
-   Zoom
-   ========================================================== */
-function openZoom(src) {
-    document.getElementById('zoomImg').src = src;
-    document.getElementById('zoomOverlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeZoom() {
-    document.getElementById('zoomOverlay').classList.remove('open');
-    document.body.style.overflow = '';
-}
-
-document.getElementById('zoomOverlay').addEventListener('click', function (e) {
-    if (e.target === this || e.target.tagName === 'IMG') closeZoom();
-});
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeZoom();
-});
-
-document.getElementById('totalDisplay').textContent = CONFIG.totalImages;
-</script>
 
 </body>
 </html>
