@@ -19,6 +19,7 @@
             --muted: #64748b;
             --green: #0d9460;
             --green-bg: #ecfdf5;
+            --red: #ef4444;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -124,6 +125,8 @@
         .btn-navy:hover { background: var(--navy-hover); box-shadow: 0 6px 20px rgba(17,34,64,0.28); }
         .btn-green { background: var(--green); color: var(--white); }
         .btn-green:hover { background: #0b7d52; box-shadow: 0 6px 20px rgba(13,148,96,0.25); }
+        .btn-red { background: var(--red); color: var(--white); }
+        .btn-red:hover { background: #dc2626; }
         .btn-outline {
             background: transparent;
             color: var(--navy);
@@ -216,6 +219,16 @@
         }
         .q-item:last-child { margin-bottom: 0; }
         .q-item .q-text { font-size: 16px; font-weight: 600; color: var(--text); line-height: 1.6; }
+        .q-item .q-img {
+            margin-top: 12px;
+            text-align: center;
+        }
+        .q-item .q-img img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
         .q-item .a-text {
             display: none;
             margin-top: 14px;
@@ -247,9 +260,8 @@
             perspective: 1000px;
             width: 100%;
             max-width: 600px;
-            height: 380px;
-            margin: 20px auto 30px;
-            cursor: pointer;
+            height: 400px;
+            margin: 20px auto 10px;
         }
         .fc-inner {
             position: relative;
@@ -311,18 +323,25 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+        .fc-back .fc-btns {
+            position: absolute;
+            bottom: 25px;
+            display: flex;
+            gap: 15px;
+        }
         .fc-controls {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
         }
         .fc-counter {
             font-size: 16px;
             font-weight: 700;
             color: var(--navy);
-            min-width: 60px;
+            min-width: 70px;
             text-align: center;
         }
 
@@ -362,7 +381,7 @@
             .actions { padding: 14px; gap: 8px; }
             .btn { padding: 11px 20px; font-size: 13px; }
             .chip-btn span { padding: 8px 14px; font-size: 13px; }
-            .fc-container { height: 320px; }
+            .fc-container { height: 360px; }
             .fc-front { font-size: 18px; }
             .fc-back { font-size: 16px; }
         }
@@ -393,7 +412,7 @@
             <h1>MIMG 422 End Block</h1>
             <div class="subtitle">Past Questions & Flashcards</div>
             <p class="desc">
-                Practice past questions or review high-yield flashcards organized by lecture.
+                Practice past questions or review high-yield flashcards organized by patch and lecture.
             </p>
             <div class="welcome-btns">
                 <button class="btn btn-navy" onclick="openSelection('exam')">
@@ -408,7 +427,12 @@
         <!-- ===== Selection Screen ===== -->
         <section class="selection-screen" id="selectionScreen">
             <h2 id="selectionTitle">Customize Your Practice</h2>
-            <p class="sub">Choose a lecture or go random</p>
+            <p class="sub">Choose patch and lecture, or go random</p>
+
+            <div class="select-group">
+                <label><i class="fas fa-calendar-alt" style="margin-right:6px"></i> Select Patch</label>
+                <div class="chip-grid" id="patchGrid"></div>
+            </div>
 
             <div class="select-group">
                 <label><i class="fas fa-book" style="margin-right:6px"></i> Select Lecture</label>
@@ -433,7 +457,7 @@
 
         <!-- ===== Flashcards ===== -->
         <section id="flashScreen" style="display:none; padding-top: 20px;">
-            <div class="fc-container" onclick="flipCard()">
+            <div class="fc-container">
                 <div class="fc-inner" id="flashInner">
                     <div class="fc-front">
                         <span class="fc-label">Question</span>
@@ -442,11 +466,16 @@
                     <div class="fc-back">
                         <span class="fc-label">Answer</span>
                         <span id="flashBackText"></span>
+                        <div class="fc-btns" id="fcBtns" style="display:none;">
+                            <button class="btn btn-green btn-sm" onclick="markFlashcard(true)"><i class="fas fa-check"></i> Correct</button>
+                            <button class="btn btn-red btn-sm" onclick="markFlashcard(false)"><i class="fas fa-times"></i> Incorrect</button>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="fc-controls">
                 <button class="btn btn-outline btn-sm" onclick="prevFlashcard()"><i class="fas fa-arrow-left"></i> Prev</button>
+                <button class="btn btn-navy btn-sm" onclick="flipCard()"><i class="fas fa-sync-alt"></i> Flip</button>
                 <div class="fc-counter" id="flashCounter">1 / 1</div>
                 <button class="btn btn-outline btn-sm" onclick="nextFlashcard()">Next <i class="fas fa-arrow-right"></i></button>
                 <button class="btn btn-navy btn-sm" onclick="shuffleFlashcards()"><i class="fas fa-shuffle"></i> Shuffle</button>
@@ -475,221 +504,239 @@
    QUESTIONS BANK
    ===================================================== */
 const bank = {
-    "9- Urinary Radiology": [
-        { q: "Which of the following is used in Vesicouretheal reflux?", a: "Micturating cystourethrogram" },
-        { q: "Which modality is used in urethral injury?", a: "Retrograde urethrogram" },
-        { q: "Which structure is seen as triangular hypoechoic areas?", a: "Pyramid" },
-        { q: "Pt in CT showed deposition of calcium in the renal medulla, this may be due to:", a: "Hyperparathyroidism" },
-        { q: "Patient with flank pain, difficulty urination…", a: "Bladder outlet Obstruction" },
-        { q: "In Ultrasound, the kidneys were enlarged and showed multi hypoechoic lesion bilateral?", a: "Autosomal Dominant Polycystic kidney disease" },
-        { q: "Case of 3 years child, CT showed patchy enhancement of the lesion, heterogeneous, area of calcification?", a: "Wilms tumor" },
-        { q: "A 45-year-old patient presents to the emergency department with severe flank pain radiating to the groin associated with hematuria. Which of the following is the best initial imaging modality to confirm the diagnosis?", a: "CT scan of the abdomen and pelvis (non-contrast)" }
-    ],
-    "10- Male Reproductive Radiology": [
-        { q: "Male patient with varicocele, best imaging modality?", a: "US" },
-        { q: "In basis of US if patient come with prostatic cancer, finding?", a: "Peripheral zone mass" },
-        { q: "A patient presents with acute Right scrotal pain associated with fever and vomiting. On clinical examination, elevation of the testis does not relieve the pain, and scratching the medial aspect of the thigh fails to cause elevation of the testis. Ultrasound is performed shown?", a: "Decreased vascularity in Right testis" },
-        { q: "Ectopic testis in the abdomen, best imaging modality?", a: "MRI" },
-        { q: "US Show small non shadowing hyperechoic foci in which case?", a: "Testicular microlithiasis" },
-        { q: "Male after TRUS performed, there are increased total prostate volume, elevated post micturition residual volume, hydronephrosis diagnosis?", a: "Benign prostatic hyperplasia" }
-    ],
-    "11- Female Reproductive Radiology": [
-        { q: "Post-menopausal female patient with vaginal bleeding, which if the following US finding consider to have endometrial cancer?", a: "Widening of endometrial stripe" },
-        { q: "Female After HSG was performed the uterus appears divided with angle more than 105?", a: "Bicornuate uterus" },
-        { q: "44 year old obese female with irregular menstruation US show multiple Small anechoic peripheral cysts 'string of pearls'?", a: "Polycystic ovary syndrome" },
-        { q: "Which of the following is a Benign ovarian mass feature?", a: "Solid component with no vascularity on Doppler" },
-        { q: "Plain film show Tooth component of ovarian mass?", a: "Dermoid cyst" },
-        { q: "Female patient with history of tubal pregnancy, amenorrhea, vaginal bleeding & elevated B-hCG. Best initial imaging?", a: "Transvaginal US" },
-        { q: "Female patient with amenorrhea, vaginal bleeding & elevated B-hCG. US show multiple cysts within large placenta?", a: "Hydatidiform mole" }
-    ]
+    "2025-2026": {
+        "9- Urinary Radiology": [
+            { q: "Which of the following is used in Vesicouretheal reflux?", a: "Micturating cystourethrogram" },
+            { q: "Which modality is used in urethral injury?", a: "Retrograde urethrogram" },
+            { q: "Which structure is seen as triangular hypoechoic areas?", a: "Pyramid" },
+            { q: "Pt in CT showed deposition of calcium in the renal medulla, this may be due to:", a: "Hyperparathyroidism" },
+            { q: "Patient with flank pain, difficulty urination…", a: "Bladder outlet Obstruction", img: "past-2025-2026-urineary-US.png" },
+            { q: "In Ultrasound, the kidneys were enlarged and showed multi hypoechoic lesion bilateral?", a: "Autosomal Dominant Polycystic kidney disease" },
+            { q: "Case of 3 years child, CT showed patchy enhancement of the lesion, heterogeneous, area of calcification?", a: "Wilms tumor" },
+            { q: "A 45-year-old patient presents to the emergency department with severe flank pain radiating to the groin associated with hematuria. Which of the following is the best initial imaging modality to confirm the diagnosis?", a: "CT scan of the abdomen and pelvis (non-contrast)" }
+        ],
+        "10- Male Reproductive Radiology": [
+            { q: "Male patient with varicocele, best imaging modality?", a: "US" },
+            { q: "In basis of US if patient come with prostatic cancer, finding?", a: "Peripheral zone mass" },
+            { q: "A patient presents with acute Right scrotal pain associated with fever and vomiting. On clinical examination, elevation of the testis does not relieve the pain, and scratching the medial aspect of the thigh fails to cause elevation of the testis. Ultrasound is performed shown?", a: "Decreased vascularity in Right testis" },
+            { q: "Ectopic testis in the abdomen, best imaging modality?", a: "MRI" },
+            { q: "US Show small non shadowing hyperechoic foci in which case?", a: "Testicular microlithiasis" },
+            { q: "Male after TRUS performed, there are increased total prostate volume, elevated post micturition residual volume, hydronephrosis diagnosis?", a: "Benign prostatic hyperplasia" }
+        ],
+        "11- Female Reproductive Radiology": [
+            { q: "Post-menopausal female patient with vaginal bleeding, which if the following US finding consider to have endometrial cancer?", a: "Widening of endometrial stripe" },
+            { q: "Female After HSG was performed the uterus appears divided with angle more than 105?", a: "Bicornuate uterus" },
+            { q: "44 year old obese female with irregular menstruation US show multiple Small anechoic peripheral cysts 'string of pearls'?", a: "Polycystic ovary syndrome" },
+            { q: "Which of the following is a Benign ovarian mass feature?", a: "Solid component with no vascularity on Doppler" },
+            { q: "Plain film show Tooth component of ovarian mass?", a: "Dermoid cyst" },
+            { q: "Female patient with history of tubal pregnancy, amenorrhea, vaginal bleeding & elevated B-hCG. Best initial imaging?", a: "Transvaginal US" },
+            { q: "Female patient with amenorrhea, vaginal bleeding & elevated B-hCG. US show multiple cysts within large placenta?", a: "Hydatidiform mole" }
+        ],
+        "12- Brain & Skull imaging": [
+            { q: "Best imaging modality in case of Para nasal sinusitis?", a: "CT" },
+            { q: "A CT scan of the brain shows a large posterior fossa with cystic dilatation of the fourth ventricle and absent of the cerebellar vermis. What is the most likely diagnosis?", a: "Dandy–Walker malformation" },
+            { q: "Obstruction of aqueduct?", a: "Lateral & third ventricle dilation" },
+            { q: "Which of the following appears hyperdense in CT brain?", a: "Recent blood" },
+            { q: "Cortical sulci effacement consider as?", a: "Mass effect" },
+            { q: "Racing car (parallel of lateral ventricles) appears in which case?", a: "Agenesis of Corpus callosum" },
+            { q: "Male patient with repeated headache & seizure?", a: "Meningioma", img: "past-2025-2026-Brain-CT.png" },
+            { q: "Female with milky secretion & amenorrhea, infertility… next imaging modality?", a: "MRI sella with contrast" },
+            { q: "Patient with optic neuritis, MRI show hyperintense medullary lesions most likely diagnosis?", a: "Multiple sclerosis" },
+            { q: "Patient with repeated seizures fever, high white blood cells. After enhance CT performed, ring enhancement with central hypo-density & edema, most likely diagnosis?", a: "Cerebral abscess" },
+            { q: "79 year old man with prominent ventricle & sulci. These findings suggest?", a: "Cerebral atrophy" }
+        ]
+    }
 };
 
 /* =====================================================
    FLASHCARDS BANK
    ===================================================== */
 const flashcardsBank = {
-    "9- Urinary Radiology": [
-        { front: "Why is imaging essential in urology?", back: "Many urinary tract diseases cannot be adequately assessed by physical examination alone." },
-        { front: "What are the main imaging modalities used in urinary tract diseases?", back: "KUB X-ray, IVU, cystogram, MCUG/VCUG, ultrasound, CT, MRI, angiography, radionuclide imaging, and retrograde urethrogram." },
-        { front: "What does KUB stand for?", back: "Kidney, Ureter, and Bladder." },
-        { front: "What is the main role of KUB imaging?", back: "Detection of radiopaque urinary stones." },
-        { front: "What are common indications for KUB?", back: "Hematuria, loin pain, abdominal pain, urinary stones, and abdominal masses." },
-        { front: "What is a major limitation of KUB?", back: "Sensitivity decreases for small stones." },
-        { front: "What is IVU?", back: "An X-ray study of kidneys, ureters, and bladder after intravenous contrast injection." },
-        { front: "What two aspects does IVU assess?", back: "Anatomy and function of the urinary tract." },
-        { front: "What type of contrast is commonly used in IVU?", back: "Low-osmolar nonionic contrast." },
-        { front: "Why is a scout film (KUB) obtained before IVU?", back: "To identify stones before contrast obscures them." },
-        { front: "Which imaging modality has largely replaced IVU?", back: "CT scan." },
-        { front: "What is a cystogram?", back: "Imaging study used to evaluate the urinary bladder after filling it with contrast." },
-        { front: "What are the main indications for cystography?", back: "Cystitis, trauma, tumors, and congenital anomalies." },
-        { front: "How can the bladder be filled for a cystogram?", back: "Via IVU or direct catheterization." },
-        { front: "What does MCUG evaluate?", back: "Functional and anatomical abnormalities of the bladder and urethra." },
-        { front: "What is the most common pediatric indication for MCUG?", back: "Recurrent urinary tract infections (UTIs)." },
-        { front: "Which condition is classically diagnosed by MCUG?", back: "Vesicoureteral reflux (VUR)." },
-        { front: "What is vesicoureteral reflux?", back: "Backward flow of urine from the bladder into the ureters and kidneys." },
-        { front: "What other conditions can MCUG detect?", back: "Posterior urethral valves, stress incontinence, and neurogenic bladder." },
-        { front: "What is the main purpose of a retrograde urethrogram?", back: "Assessment of the urethra." },
-        { front: "How is an RGU performed?", back: "Contrast is injected retrogradely into the urethra and radiographs are taken." },
-        { front: "What is the first-line imaging modality for most urinary tract diseases?", back: "Ultrasound." },
-        { front: "What are the main advantages of ultrasound?", back: "No ionizing radiation and no IV contrast required." },
-        { front: "Which urinary structures can be evaluated by ultrasound?", back: "Kidneys, bladder, ureters, and prostate." },
-        { front: "Can ultrasound differentiate solid from cystic masses?", back: "Yes." },
-        { front: "What is hydronephrosis?", back: "Dilatation of the renal collecting system due to urinary obstruction." },
-        { front: "How do simple cysts appear on ultrasound?", back: "Anechoic (black) with posterior acoustic enhancement." },
-        { front: "What does 'anechoic' mean?", back: "No internal echoes; appears black on ultrasound." },
-        { front: "What does 'hyperechoic' mean?", back: "Brighter than surrounding tissues." },
-        { front: "What does 'hypoechoic' mean?", back: "Darker than surrounding tissues." },
-        { front: "What is the normal adult kidney length on ultrasound?", back: "Approximately 9–12 cm." },
-        { front: "What is the renal sinus?", back: "The central echogenic area containing the collecting system, fat, and vessels." },
-        { front: "Are normal ureters usually visible on ultrasound?", back: "No." },
-        { front: "How should the urinary bladder appear when distended?", back: "Thin-walled with sharply defined margins." },
-        { front: "What is CT KUB primarily used for?", back: "Diagnosis of urolithiasis (urinary stones)." },
-        { front: "Why is CT superior for urinary stones?", back: "It detects both radiopaque and radiolucent stones." },
-        { front: "What is the investigation of choice for ureteric stones?", back: "Non-contrast spiral CT." },
-        { front: "What additional information does CT provide about stones?", back: "Size, location, density, and degree of obstruction." },
-        { front: "What is the major advantage of MRI over CT?", back: "Excellent multiplanar imaging without ionizing radiation." },
-        { front: "What is a major limitation of MRI in urinary imaging?", back: "Calcifications and stones are poorly visualized." },
-        { front: "When is MRI commonly used in urinary tract imaging?", back: "Evaluation of renal artery stenosis and staging bladder/prostate cancers." },
-        { front: "What does renal angiography evaluate?", back: "Renal blood vessels." },
-        { front: "What is a common indication for renal angiography?", back: "Renal artery stenosis." },
-        { front: "What is a horseshoe kidney?", back: "Fusion of the lower poles of both kidneys across the midline." },
-        { front: "Why is a horseshoe kidney clinically important?", back: "Increased risk of trauma and stone formation." },
-        { front: "What is a pelvic kidney?", back: "A kidney located in the pelvis instead of the normal lumbar position." },
-        { front: "What is crossed fused ectopia?", back: "Both kidneys are located on the same side and are usually fused." },
-        { front: "What is a duplicated collecting system?", back: "Presence of two collecting systems draining a kidney." },
-        { front: "Which imaging study best demonstrates vesicoureteral reflux?", back: "MCUG (VCUG)." },
-        { front: "What happens in severe reflux?", back: "Urine reaches the ureters and kidneys causing dilatation." },
-        { front: "What is nephrocalcinosis?", back: "Calcium deposition within the renal parenchyma." },
-        { front: "Which type of nephrocalcinosis is more common?", back: "Medullary nephrocalcinosis." },
-        { front: "What are common causes of nephrocalcinosis?", back: "Hyperparathyroidism, renal tubular acidosis, and medullary sponge kidney." },
-        { front: "What is nephrolithiasis?", back: "Formation of stones within the kidney." },
-        { front: "What are common symptoms of urinary stones?", back: "Flank pain and hematuria." },
-        { front: "What is a staghorn calculus?", back: "A large branching stone occupying the renal pelvis and calyces." },
-        { front: "Which stones are radiolucent on plain X-ray?", back: "Uric acid and xanthine stones." },
-        { front: "How do all renal calculi appear on CT?", back: "High attenuation (hyperdense)." },
-        { front: "How does a stone appear on ultrasound?", back: "Hyperechoic with posterior acoustic shadowing." },
-        { front: "What is the preferred imaging modality for renal abscess?", back: "Contrast-enhanced CT." },
-        { front: "How does a renal abscess appear on CT?", back: "Low-attenuation fluid collection with a thick irregular wall." },
-        { front: "What CT finding strongly suggests abscess formation?", back: "Gas within a cystic or low-attenuation lesion." },
-        { front: "What is the imaging modality of choice for renal trauma?", back: "CT scan." },
-        { front: "What are common causes of renal trauma?", back: "Road traffic accidents and contact sports." },
-        { front: "What are the major presenting features of renal trauma?", back: "Loin pain and hematuria." },
-        { front: "What are examples of low-grade renal injury?", back: "Subcapsular hematoma, contusion, and laceration." },
-        { front: "What are examples of high-grade renal injury?", back: "Renal vascular injury and shattered kidney." },
-        { front: "First-line imaging for urinary tract disease?", back: "Ultrasound." },
-        { front: "Best test for ureteric stones?", back: "Non-contrast spiral CT." },
-        { front: "Best test for vesicoureteral reflux?", back: "MCUG (VCUG)." },
-        { front: "Best imaging for renal trauma?", back: "CT scan." },
-        { front: "Best imaging for renal abscess?", back: "Contrast-enhanced CT." },
-        { front: "Which modality does NOT show calcifications well?", back: "MRI." },
-        { front: "Which modality has no radiation and is first-line?", back: "Ultrasound." },
-        { front: "Best test for urinary stones?", back: "Non-contrast CT KUB." },
-        { front: "Best test for urethral injury?", back: "Retrograde urethrogram." },
-        { front: "Most common fusion anomaly?", back: "Horseshoe kidney." },
-        { front: "Normal renal length?", back: "9–12 cm." },
-        { front: "MRI limitation?", back: "Cannot reliably detect calcifications/stones." },
-        { front: "Most common cause of medullary nephrocalcinosis?", back: "Hyperparathyroidism." },
-        { front: "Only radiolucent urinary stones on X-ray?", back: "Uric acid and xanthine stones." }
-    ],
-    "10- Male Reproductive Radiology": [
-        { front: "What is the imaging modality of choice for most scrotal diseases?", back: "Ultrasound." },
-        { front: "How does Doppler distinguish torsion from infection?", back: "Torsion (↓ flow) vs infection (↑ flow)." },
-        { front: "What is Hydrocele and its US appearance?", back: "Anechoic fluid around the testis." },
-        { front: "What is Varicocele and its US criteria?", back: "Dilated pampiniform plexus >3 mm with venous reflux." },
-        { front: "What does the Whirlpool sign indicate?", back: "Testicular torsion." },
-        { front: "What is the investigation of choice for intra-abdominal undescended testes?", back: "MRI." },
-        { front: "What is the typical US appearance of Seminoma?", back: "Homogeneous hypoechoic mass." },
-        { front: "Where does BPH arise from?", back: "The transitional zone." },
-        { front: "Where does Prostate cancer usually arise?", back: "The peripheral zone." },
-        { front: "What type of metastases does prostate cancer commonly produce?", back: "Osteoblastic bone metastases visible on bone scan." },
-        { front: "What is the first imaging modality for scrotal disorders, and what is the main emergency distinction it must help make?", back: "Ultrasound (US) – with color Doppler. Emergency distinction: testicular torsion (absent/reduced flow) vs. epididymitis/orchitis (increased flow)." },
-        { front: "On Doppler ultrasound, how do you differentiate testicular torsion from epididymo‑orchitis?", back: "Torsion → reduced or absent intratesticular blood flow. Epididymo‑orchitis → increased vascularity (hyperemia)." },
-        { front: "What is the 'whirlpool sign' on scrotal US, and what does it indicate?", back: "Spiral‑like twisting of the spermatic cord. Indicates testicular torsion (pathognomonic finding)." },
-        { front: "A 14‑year‑old boy awakens with acute right scrotal pain. US shows the right testis lying horizontally with slightly reduced flow. What is the most likely diagnosis?", back: "Testicular torsion – the horizontal lie (oblique orientation) is an additional sonographic clue." },
-        { front: "What clinical findings favor testicular torsion over epididymitis? (Name at least 3)", back: "1. Sudden onset, often nocturnal/wakening.<br>2. Absent cremasteric reflex.<br>3. Negative Prehn sign (pain not relieved by elevating testis).<br>4. Peak ages: neonatal period or 10–14 years." },
-        { front: "You suspect testicular torsion with high clinical probability. Should you wait for an ultrasound?", back: "No. Do not delay definitive treatment (surgical detorsion) for diagnostic imaging if clinical suspicion is high – the testis may not survive beyond 6 hours." },
-        { front: "On ultrasound, what findings suggest testicular necrosis from prolonged torsion?", back: "Heterogeneous appearance of testicular parenchyma + absence of blood flow on Doppler." },
-        { front: "What is a hydrocele? How does it appear on ultrasound, and what does 'positive transillumination' mean?", back: "Painless fluid collection between layers of tunica vaginalis. US: anechoic fluid surrounding the testis. Transillumination: light passes through the fluid (positive test) – helps differentiate from solid tumor." },
-        { front: "A patient has a left scrotal swelling that feels like a 'bag of worms' and worsens with Valsalva. What is the diagnosis and the key ultrasound feature?", back: "Varicocele – dilatation of pampiniform plexus veins (>3 mm). US: serpiginous, tubular anechoic structures with venous reflux on Doppler during Valsalva." },
-        { front: "What is the gold standard investigation for acute epididymitis? Describe two typical sonographic findings.", back: "Ultrasound (color Doppler). Findings: 1. Enlarged, hypoechoic epididymis (or testis in orchitis). 2. Markedly increased vascularity (hyperemia). ± reactive hydrocele, scrotal wall thickening." },
-        { front: "A 25‑year‑old man has a painless, firm testicular nodule that does not transilluminate. What is the most likely diagnosis and the next imaging step?", back: "Testicular tumor (most common solid malignancy in men 20–35). Next step: Testicular ultrasound – to confirm intratesticular mass and characterize it." },
-        { front: "On testicular US, describe the typical appearance of seminoma vs. nonseminomatous germ cell tumor.", back: "Seminoma: hypoechoic, homogenous, sharp margins. Nonseminoma: inhomogenous, variable echogenicity, may have cysts or calcifications." },
-        { front: "What is testicular microlithiasis and why is it clinically relevant?", back: "Multiple tiny (1–3 mm) hyperechoic foci ('starry sky' appearance) without shadowing. It is a possible precursor of testicular carcinoma – warrants follow‑up." },
-        { front: "What is the best imaging modality for suspected prostate cancer, and what are its two main advantages?", back: "MRI (T2‑weighted) – preferred modality. Advantages: 1. Detects small peripheral zone lesions (low T2 signal). 2. Assesses extracapsular spread and lymph node metastases." },
-        { front: "Why is transrectal ultrasound (TRUS) performed in prostate disease? Give two indications.", back: "1. Guidance for prostate biopsy (main indication). 2. Assess prostate size and identify small masses when transabdominal US is insufficient." },
-        { front: "A 75‑year‑old man with urinary retention has a prostate volume >30 cc on US. What is the most likely diagnosis, and what secondary findings suggest bladder outlet obstruction?", back: "Benign prostatic hyperplasia (BPH). Secondary signs: elevated post‑void residual (>50 mL), bladder wall thickening/trabeculation, hydronephrosis." },
-        { front: "Where does prostate cancer most commonly metastasize, and what does it look like on a nuclear bone scan?", back: "Metastasizes to skeleton (typically sclerotic/osteoblastic lesions). Bone scan: increased activity (hot spots) at sites of metastasis." },
-        { front: "A non‑palpable testis is suspected to be intra‑abdominal. Ultrasound is inconclusive. What is the next imaging study of choice?", back: "MRI – best for locating non‑palpable intra‑abdominal or inguinal testes." },
-        { front: "What is the clinical significance of prostatic calcifications seen on ultrasound?", back: "Very common in older men. No correlation with BPH symptoms or prostate cancer risk – usually an incidental finding." },
-        { front: "Why is CT not preferred for initial evaluation of prostate cancer? When is it useful?", back: "Poor zonal anatomy and soft‑tissue contrast within the prostate. Useful for: determining local extraprostatic spread and detecting lymph node metastases (and PET‑CT for distant metastases)." }
-    ],
-    "11- Female Reproductive Radiology": [
-        { front: "Best first-line modality in gynecology?", back: "Ultrasound." },
-        { front: "Best modality for local tumor staging?", back: "MRI." },
-        { front: "Best test for tubal patency?", back: "HSG." },
-        { front: "Most accurate first-trimester dating measurement?", back: "CRL." },
-        { front: "Postmenopausal endometrial thickness considered abnormal?", back: "> 5 mm." },
-        { front: "Classic PCOS appearance?", back: "String of pearls." },
-        { front: "Most common benign uterine tumor?", back: "Leiomyoma (Fibroid)." },
-        { front: "Most common site of ectopic pregnancy?", back: "Fallopian tube." },
-        { front: "Classic triad of ectopic pregnancy?", back: "Amenorrhea + Pelvic pain + Vaginal bleeding." },
-        { front: "Placenta previa presentation?", back: "Painless vaginal bleeding." },
-        { front: "What is Hydrosalpinx?", back: "Dilated fluid-filled fallopian tube due to obstruction." },
-        { front: "What are the two primary ultrasound approaches for evaluating the female pelvis, and what bladder preparation is needed for each?", back: "Transabdominal US: requires full bladder (acoustic window). Transvaginal US: better resolution, no full bladder needed; used for endometrial detail and early pregnancy." },
-        { front: "In a postmenopausal woman, what endometrial thickness on transvaginal US is considered abnormal, and what must be excluded?", back: "> 5 mm – abnormal. Must exclude endometrial carcinoma (biopsy indicated)." },
-        { front: "What is the first sonographic sign of pregnancy and when is it visible on transvaginal vs. transabdominal US?", back: "Gestational sac (GS) – an echogenic ring with anechoic center. Transvaginal: 4–5 weeks GA. Transabdominal: 6 weeks GA." },
-        { front: "What is the most accurate measurement of gestational age in the first trimester, and how is it measured?", back: "Crown‑rump length (CRL) – measured from the top of the fetal head to the bottom of the trunk." },
-        { front: "What are the five components of the biophysical profile (BPP) used to assess fetal wellbeing?", back: "1. Amniotic fluid volume 2. Fetal body movements 3. Fetal limb flexion/extension 4. Fetal breathing movements 5. Fetal heart rate (non‑stress test)" },
-        { front: "What is placenta previa, and after which gestational week is the diagnosis clinically significant?", back: "Placenta remains positioned over the lower uterine segment after 36 weeks – risks painless third‑trimester bleeding." },
-        { front: "A lost intrauterine contraceptive device (IUCD) is suspected. What is the first imaging investigation? If not located in the pelvis, what next?", back: "First: ultrasound – IUCD appears as a linear hyperechoic structure. If not in pelvis: plain abdominal X‑ray to rule out uterine perforation/migration." },
-        { front: "What is hysterosalpingography (HSG)? Name its reference indication.", back: "Fluoroscopic imaging after contrast injection into the cervical canal. Reference method for assessing tubal patency (infertility workup)." },
-        { front: "List three absolute contraindications to HSG.", back: "1. Pregnancy (absolute – must have negative β‑hCG) 2. Active pelvic inflammatory disease (acute/subacute PID) 3. Recent uterine or tubal surgery" },
-        { front: "On HSG, what finding indicates a normal patent fallopian tube?", back: "Contrast media spills freely into the peritoneal cavity (seen between bowel loops)." },
-        { front: "A 30‑year‑old with infertility has an HSG showing a single uterine canal with a broad smooth indentation <1 cm at the fundus. What is the diagnosis?", back: "Arcuate uterus – a normal variant; the mild fundal indentation does not usually affect fertility." },
-        { front: "How can septate uterus be distinguished from bicornuate uterus on imaging?", back: "Septate: angle between uterine horns <75°; myometrial septum divides the cavity. Bicornuate: angle >75°; two separate horns with a deep fundal cleft." },
-        { front: "What is hydrosalpinx and how does it appear on HSG?", back: "Distal fallopian tube blockage with fluid‑filled dilation. HSG: tubal dilatation, no contrast spill into peritoneum." },
-        { front: "A young woman presents with hirsutism, obesity, and irregular menses. Ultrasound shows enlarged ovaries with multiple small peripheral follicles. What is the diagnosis and the classic appearance?", back: "Polycystic ovary syndrome (PCOS) – 'string of pearls' sign (subcapsular follicles arranged around the periphery)." },
-        { front: "List three sonographic features that suggest a malignant ovarian mass (vs. benign).", back: "1. Large size, mixed solid‑cystic composition 2. Thick, irregular septations (>3 mm) 3. Vascularity within solid components on Doppler (plus ascites or peritoneal deposits)" },
-        { front: "What is a dermoid cyst (mature cystic teratoma)? Name two characteristic imaging findings.", back: "Benign ovarian germ cell tumor containing fat, hair, teeth, calcifications. Imaging: fat‑density component on CT; calcified teeth on plain film or CT; shadowing echogenic solid nodule on US." },
-        { front: "A 35‑year‑old woman has menorrhagia and a palpable pelvic mass. Ultrasound shows a well‑circumscribed hypoechoic solid mass in the myometrium. What is the most likely diagnosis?", back: "Uterine leiomyoma (fibroid) – common benign tumor of reproductive age." },
-        { front: "What is the best imaging modality to assess the local extent of cervical or endometrial carcinoma before surgery?", back: "MRI (T2‑weighted) – accurately shows tumor invasion beyond the cervix or into the myometrium." },
-        { front: "A woman with first‑trimester bleeding, amenorrhea, and unilateral adnexal pain has an empty uterus on ultrasound. A gestational sac with embryo is seen in the adnexa. What is the diagnosis?", back: "Ectopic pregnancy (most common site: fallopian tube). Rupture risk → surgical emergency." },
-        { front: "What is the single most reliable sonographic sign of an ectopic pregnancy?", back: "Extra‑uterine gestational sac containing a live embryo (or yolk sac) seen in the adnexa, with an empty uterine cavity." }
-    ],
-    "12- Brain & Skull imaging": [
-        { front: "What is the rare current indication for plain skull radiographs?", back: "Skeletal surveys in suspected non‑accidental injury (child abuse) or myeloma." },
-        { front: "On a plain skull X‑ray, what does a linear lucency paralleling the sagittal suture represent?", back: "A cranial vault fracture." },
-        { front: "What are the three main imaging findings of sinusitis on CT?", back: "1. Opacification 2. Mucosal thickening 3. Air‑fluid levels (Also: soft tissue swelling)" },
-        { front: "Why are plain X‑rays of the sinuses no longer recommended as a first‑line investigation?", back: "Limited sensitivity and specificity; CT is preferred." },
-        { front: "What is the routine slice thickness for a non‑contrast CT brain, and for the pituitary?", back: "Brain: 10 mm. Pituitary: 5 mm or less." },
-        { front: "Define intra‑axial vs. extra‑axial brain lesions.", back: "Intra‑axial: within brain parenchyma (grey/white matter). Extra‑axial: involving meninges, extracerebral spaces, or skull vault." },
-        { front: "List four signs of mass effect on CT brain.", back: "1. Effacement of cortical sulci 2. Compression of ventricle 3. Shift of midline structures 4. Transtentorial herniation" },
-        { front: "What does 'ring enhancement' on CT/MRI typically suggest? (Give three possibilities)", back: "Central necrosis with peripheral enhancement:<br>1. Abscess<br>2. High-grade glioma (glioblastoma)<br>3. Large metastasis" },
-        { front: "On T2‑weighted MRI, what is the signal intensity of CSF? On T1‑weighted?", back: "T2: BRIGHT (hyperintense). T1: BLACK (hypointense)." },
-        { front: "Which MRI sequence is most sensitive for detecting acute ischemic stroke within minutes of onset?", back: "Diffusion‑weighted imaging (DWI) – shows bright signal (restricted diffusion)." },
-        { front: "A patient presents with sudden focal deficit. What is the first CT question to answer before considering thrombolysis?", back: "Exclude intracranial hemorrhage (blood is hyperdense on non‑contrast CT)." },
-        { front: "What is a watershed (border‑zone) infarct?", back: "Infarct in the region between the territories of two major cerebral arteries (e.g., ACA/MCA or MCA/PCA) – often due to hypoperfusion." },
-        { front: "Name the four types of brain tumors by cell of origin (gliomas arise from which cells)?", back: "Gliomas arise from: Astrocytes, Oligodendrocytes, Ependymal cells. Other major categories: metastases, meningiomas, pituitary tumors, germ cell tumors." },
-        { front: "On CT, a solitary, irregular, low‑attenuation lesion with mass effect is most likely what?", back: "Glioma (e.g., astrocytoma or glioblastoma)." },
-        { front: "Which glioma is classically associated with intralesional calcifications on CT?", back: "Oligodendroglioma." },
-        { front: "Describe the 'butterfly glioma' appearance on MRI.", back: "Bilateral enhancement involving both frontal lobes and crossing the corpus callosum – typical of glioblastoma multiforme." },
-        { front: "What is the gold standard imaging modality for pituitary adenomas? How are they sized?", back: "MRI sella with IV contrast. Microadenoma: <1 cm. Macroadenoma: >1 cm." },
-        { front: "A suprasellar calcified cyst with solid and cystic components in a child is most likely what tumor?", back: "Craniopharyngioma (bimodal peaks: 5–14 years and 50–75 years)." },
-        { front: "What is the 'dural tail sign' and which tumor is it characteristic of?", back: "Linear enhancement extending from a dural‑based mass along the meninges. Characteristic of meningioma." },
-        { front: "On MRI, what are Dawson fingers and which disease are they associated with?", back: "Finger‑like radial extensions of periventricular hyperintense plaques (T2/FLAIR). Pathognomonic for multiple sclerosis (MS)." },
-        { front: "A ring‑enhancing lesion in the posterior fossa of an adult should be considered what until proven otherwise?", back: "Metastasis (especially from lung, breast, or melanoma)." },
-        { front: "How can MRI help differentiate a cerebral abscess from a necrotic metastasis?", back: "History is key (e.g., otitis media, dental infection). Both can show ring enhancement, but abscess often has smooth, thin, uniform wall and restricted diffusion on DWI (pus = high signal)." },
-        { front: "How is hydrocephalus imaged in infants <18 months vs. older children/adults?", back: "Infants (<18 mo): Ultrasound via open anterior fontanelle. Older children/adults: CT or MRI." },
-        { front: "On CT/MRI, what distinguishes communicating from non‑communicating hydrocephalus?", back: "Communicating: all ventricles dilated (impaired CSF absorption). Non‑communicating: ventricles upstream of obstruction dilated (e.g., aqueductal stenosis → dilated lateral + third, normal fourth)." },
-        { front: "What does 'Mickey Mouse ventricles' refer to?", back: "Enlargement of both lateral ventricles and the third ventricle – seen in hydrocephalus (ears = lateral ventricles, head = third ventricle)." },
-        { front: "What are the imaging signs of cerebral atrophy in an elderly patient?", back: "Enlarged ventricles (ventriculomegaly), Prominent cerebral sulci, Narrowing of gyri (hydrocephalus ex vacuo)" }
-    ]
+    "2025-2026": {
+        "9- Urinary Radiology": [
+            { front: "Why is imaging essential in urology?", back: "Many urinary tract diseases cannot be adequately assessed by physical examination alone." },
+            { front: "What are the main imaging modalities used in urinary tract diseases?", back: "KUB X-ray, IVU, cystogram, MCUG/VCUG, ultrasound, CT, MRI, angiography, radionuclide imaging, and retrograde urethrogram." },
+            { front: "What does KUB stand for?", back: "Kidney, Ureter, and Bladder." },
+            { front: "What is the main role of KUB imaging?", back: "Detection of radiopaque urinary stones." },
+            { front: "What are common indications for KUB?", back: "Hematuria, loin pain, abdominal pain, urinary stones, and abdominal masses." },
+            { front: "What is a major limitation of KUB?", back: "Sensitivity decreases for small stones." },
+            { front: "What is IVU?", back: "An X-ray study of kidneys, ureters, and bladder after intravenous contrast injection." },
+            { front: "What two aspects does IVU assess?", back: "Anatomy and function of the urinary tract." },
+            { front: "What type of contrast is commonly used in IVU?", back: "Low-osmolar nonionic contrast." },
+            { front: "Why is a scout film (KUB) obtained before IVU?", back: "To identify stones before contrast obscures them." },
+            { front: "Which imaging modality has largely replaced IVU?", back: "CT scan." },
+            { front: "What is a cystogram?", back: "Imaging study used to evaluate the urinary bladder after filling it with contrast." },
+            { front: "What are the main indications for cystography?", back: "Cystitis, trauma, tumors, and congenital anomalies." },
+            { front: "How can the bladder be filled for a cystogram?", back: "Via IVU or direct catheterization." },
+            { front: "What does MCUG evaluate?", back: "Functional and anatomical abnormalities of the bladder and urethra." },
+            { front: "What is the most common pediatric indication for MCUG?", back: "Recurrent urinary tract infections (UTIs)." },
+            { front: "Which condition is classically diagnosed by MCUG?", back: "Vesicoureteral reflux (VUR)." },
+            { front: "What is vesicoureteral reflux?", back: "Backward flow of urine from the bladder into the ureters and kidneys." },
+            { front: "What other conditions can MCUG detect?", back: "Posterior urethral valves, stress incontinence, and neurogenic bladder." },
+            { front: "What is the main purpose of a retrograde urethrogram?", back: "Assessment of the urethra." },
+            { front: "How is an RGU performed?", back: "Contrast is injected retrogradely into the urethra and radiographs are taken." },
+            { front: "What is the first-line imaging modality for most urinary tract diseases?", back: "Ultrasound." },
+            { front: "What are the main advantages of ultrasound?", back: "No ionizing radiation and no IV contrast required." },
+            { front: "Which urinary structures can be evaluated by ultrasound?", back: "Kidneys, bladder, ureters, and prostate." },
+            { front: "Can ultrasound differentiate solid from cystic masses?", back: "Yes." },
+            { front: "What is hydronephrosis?", back: "Dilatation of the renal collecting system due to urinary obstruction." },
+            { front: "How do simple cysts appear on ultrasound?", back: "Anechoic (black) with posterior acoustic enhancement." },
+            { front: "What does 'anechoic' mean?", back: "No internal echoes; appears black on ultrasound." },
+            { front: "What does 'hyperechoic' mean?", back: "Brighter than surrounding tissues." },
+            { front: "What does 'hypoechoic' mean?", back: "Darker than surrounding tissues." },
+            { front: "What is the normal adult kidney length on ultrasound?", back: "Approximately 9–12 cm." },
+            { front: "What is the renal sinus?", back: "The central echogenic area containing the collecting system, fat, and vessels." },
+            { front: "Are normal ureters usually visible on ultrasound?", back: "No." },
+            { front: "How should the urinary bladder appear when distended?", back: "Thin-walled with sharply defined margins." },
+            { front: "What is CT KUB primarily used for?", back: "Diagnosis of urolithiasis (urinary stones)." },
+            { front: "Why is CT superior for urinary stones?", back: "It detects both radiopaque and radiolucent stones." },
+            { front: "What is the investigation of choice for ureteric stones?", back: "Non-contrast spiral CT." },
+            { front: "What additional information does CT provide about stones?", back: "Size, location, density, and degree of obstruction." },
+            { front: "What is the major advantage of MRI over CT?", back: "Excellent multiplanar imaging without ionizing radiation." },
+            { front: "What is a major limitation of MRI in urinary imaging?", back: "Calcifications and stones are poorly visualized." },
+            { front: "When is MRI commonly used in urinary tract imaging?", back: "Evaluation of renal artery stenosis and staging bladder/prostate cancers." },
+            { front: "What does renal angiography evaluate?", back: "Renal blood vessels." },
+            { front: "What is a common indication for renal angiography?", back: "Renal artery stenosis." },
+            { front: "What is a horseshoe kidney?", back: "Fusion of the lower poles of both kidneys across the midline." },
+            { front: "Why is a horseshoe kidney clinically important?", back: "Increased risk of trauma and stone formation." },
+            { front: "What is a pelvic kidney?", back: "A kidney located in the pelvis instead of the normal lumbar position." },
+            { front: "What is crossed fused ectopia?", back: "Both kidneys are located on the same side and are usually fused." },
+            { front: "What is a duplicated collecting system?", back: "Presence of two collecting systems draining a kidney." },
+            { front: "Which imaging study best demonstrates vesicoureteral reflux?", back: "MCUG (VCUG)." },
+            { front: "What happens in severe reflux?", back: "Urine reaches the ureters and kidneys causing dilatation." },
+            { front: "What is nephrocalcinosis?", back: "Calcium deposition within the renal parenchyma." },
+            { front: "Which type of nephrocalcinosis is more common?", back: "Medullary nephrocalcinosis." },
+            { front: "What are common causes of nephrocalcinosis?", back: "Hyperparathyroidism, renal tubular acidosis, and medullary sponge kidney." },
+            { front: "What is nephrolithiasis?", back: "Formation of stones within the kidney." },
+            { front: "What are common symptoms of urinary stones?", back: "Flank pain and hematuria." },
+            { front: "What is a staghorn calculus?", back: "A large branching stone occupying the renal pelvis and calyces." },
+            { front: "Which stones are radiolucent on plain X-ray?", back: "Uric acid and xanthine stones." },
+            { front: "How do all renal calculi appear on CT?", back: "High attenuation (hyperdense)." },
+            { front: "How does a stone appear on ultrasound?", back: "Hyperechoic with posterior acoustic shadowing." },
+            { front: "What is the preferred imaging modality for renal abscess?", back: "Contrast-enhanced CT." },
+            { front: "How does a renal abscess appear on CT?", back: "Low-attenuation fluid collection with a thick irregular wall." },
+            { front: "What CT finding strongly suggests abscess formation?", back: "Gas within a cystic or low-attenuation lesion." },
+            { front: "What is the imaging modality of choice for renal trauma?", back: "CT scan." },
+            { front: "What are common causes of renal trauma?", back: "Road traffic accidents and contact sports." },
+            { front: "What are the major presenting features of renal trauma?", back: "Loin pain and hematuria." },
+            { front: "What are examples of low-grade renal injury?", back: "Subcapsular hematoma, contusion, and laceration." },
+            { front: "What are examples of high-grade renal injury?", back: "Renal vascular injury and shattered kidney." },
+            { front: "First-line imaging for urinary tract disease?", back: "Ultrasound." },
+            { front: "Best test for ureteric stones?", back: "Non-contrast spiral CT." },
+            { front: "Best test for vesicoureteral reflux?", back: "MCUG (VCUG)." },
+            { front: "Best imaging for renal trauma?", back: "CT scan." },
+            { front: "Best imaging for renal abscess?", back: "Contrast-enhanced CT." },
+            { front: "Which modality does NOT show calcifications well?", back: "MRI." },
+            { front: "Which modality has no radiation and is first-line?", back: "Ultrasound." },
+            { front: "Best test for urinary stones?", back: "Non-contrast CT KUB." },
+            { front: "Best test for urethral injury?", back: "Retrograde urethrogram." },
+            { front: "Most common fusion anomaly?", back: "Horseshoe kidney." },
+            { front: "Normal renal length?", back: "9–12 cm." },
+            { front: "MRI limitation?", back: "Cannot reliably detect calcifications/stones." },
+            { front: "Most common cause of medullary nephrocalcinosis?", back: "Hyperparathyroidism." },
+            { front: "Only radiolucent urinary stones on X-ray?", back: "Uric acid and xanthine stones." }
+        ],
+        "10- Male Reproductive Radiology": [
+            { front: "What is the imaging modality of choice for most scrotal diseases?", back: "Ultrasound." },
+            { front: "How does Doppler distinguish torsion from infection?", back: "Torsion (↓ flow) vs infection (↑ flow)." },
+            { front: "What is Hydrocele and its US appearance?", back: "Anechoic fluid around the testis." },
+            { front: "What is Varicocele and its US criteria?", back: "Dilated pampiniform plexus >3 mm with venous reflux." },
+            { front: "What does the Whirlpool sign indicate?", back: "Testicular torsion." },
+            { front: "What is the investigation of choice for intra-abdominal undescended testes?", back: "MRI." },
+            { front: "What is the typical US appearance of Seminoma?", back: "Homogeneous hypoechoic mass." },
+            { front: "Where does BPH arise from?", back: "The transitional zone." },
+            { front: "Where does Prostate cancer usually arise?", back: "The peripheral zone." },
+            { front: "What type of metastases does prostate cancer commonly produce?", back: "Osteoblastic bone metastases visible on bone scan." },
+            { front: "What is the first imaging modality for scrotal disorders, and what is the main emergency distinction it must help make?", back: "Ultrasound (US) – with color Doppler.<br>Emergency distinction: testicular torsion (absent/reduced flow) vs. epididymitis/orchitis (increased flow)." },
+            { front: "On Doppler ultrasound, how do you differentiate testicular torsion from epididymo‑orchitis?", back: "Torsion → reduced or absent intratesticular blood flow.<br>Epididymo‑orchitis → increased vascularity (hyperemia)." },
+            { front: "What is the 'whirlpool sign' on scrotal US, and what does it indicate?", back: "Spiral‑like twisting of the spermatic cord.<br>Indicates testicular torsion (pathognomonic finding)." },
+            { front: "A 14‑year‑old boy awakens with acute right scrotal pain. US shows the right testis lying horizontally with slightly reduced flow. What is the most likely diagnosis?", back: "Testicular torsion – the horizontal lie (oblique orientation) is an additional sonographic clue." },
+            { front: "What clinical findings favor testicular torsion over epididymitis? (Name at least 3)", back: "1. Sudden onset, often nocturnal/wakening.<br>2. Absent cremasteric reflex.<br>3. Negative Prehn sign (pain not relieved by elevating testis).<br>4. Peak ages: neonatal period or 10–14 years." },
+            { front: "You suspect testicular torsion with high clinical probability. Should you wait for an ultrasound?", back: "No. Do not delay definitive treatment (surgical detorsion) for diagnostic imaging if clinical suspicion is high – the testis may not survive beyond 6 hours." },
+            { front: "On ultrasound, what findings suggest testicular necrosis from prolonged torsion?", back: "Heterogeneous appearance of testicular parenchyma + absence of blood flow on Doppler." },
+            { front: "What is a hydrocele? How does it appear on ultrasound, and what does 'positive transillumination' mean?", back: "Painless fluid collection between layers of tunica vaginalis.<br>US: anechoic fluid surrounding the testis.<br>Transillumination: light passes through the fluid (positive test) – helps differentiate from solid tumor." },
+            { front: "A patient has a left scrotal swelling that feels like a 'bag of worms' and worsens with Valsalva. What is the diagnosis and the key ultrasound feature?", back: "Varicocele – dilatation of pampiniform plexus veins (>3 mm).<br>US: serpiginous, tubular anechoic structures with venous reflux on Doppler during Valsalva." },
+            { front: "What is the gold standard investigation for acute epididymitis? Describe two typical sonographic findings.", back: "Ultrasound (color Doppler).<br>Findings:<br>1. Enlarged, hypoechoic epididymis (or testis in orchitis).<br>2. Markedly increased vascularity (hyperemia). ± reactive hydrocele, scrotal wall thickening." },
+            { front: "A 25‑year‑old man has a painless, firm testicular nodule that does not transilluminate. What is the most likely diagnosis and the next imaging step?", back: "Testicular tumor (most common solid malignancy in men 20–35).<br>Next step: Testicular ultrasound – to confirm intratesticular mass and characterize it." },
+            { front: "On testicular US, describe the typical appearance of seminoma vs. nonseminomatous germ cell tumor.", back: "Seminoma: hypoechoic, homogenous, sharp margins.<br>Nonseminoma: inhomogenous, variable echogenicity, may have cysts or calcifications." },
+            { front: "What is testicular microlithiasis and why is it clinically relevant?", back: "Multiple tiny (1–3 mm) hyperechoic foci ('starry sky' appearance) without shadowing.<br>It is a possible precursor of testicular carcinoma – warrants follow‑up." },
+            { front: "What is the best imaging modality for suspected prostate cancer, and what are its two main advantages?", back: "MRI (T2‑weighted) – preferred modality.<br>Advantages:<br>1. Detects small peripheral zone lesions (low T2 signal).<br>2. Assesses extracapsular spread and lymph node metastases." },
+            { front: "Why is transrectal ultrasound (TRUS) performed in prostate disease? Give two indications.", back: "1. Guidance for prostate biopsy (main indication).<br>2. Assess prostate size and identify small masses when transabdominal US is insufficient." },
+            { front: "A 75‑year‑old man with urinary retention has a prostate volume >30 cc on US. What is the most likely diagnosis, and what secondary findings suggest bladder outlet obstruction?", back: "Benign prostatic hyperplasia (BPH).<br>Secondary signs: elevated post‑void residual (>50 mL), bladder wall thickening/trabeculation, hydronephrosis." },
+            { front: "Where does prostate cancer most commonly metastasize, and what does it look like on a nuclear bone scan?", back: "Metastasizes to skeleton (typically sclerotic/osteoblastic lesions).<br>Bone scan: increased activity (hot spots) at sites of metastasis." },
+            { front: "A non‑palpable testis is suspected to be intra‑abdominal. Ultrasound is inconclusive. What is the next imaging study of choice?", back: "MRI – best for locating non‑palpable intra‑abdominal or inguinal testes." },
+            { front: "What is the clinical significance of prostatic calcifications seen on ultrasound?", back: "Very common in older men.<br>No correlation with BPH symptoms or prostate cancer risk – usually an incidental finding." },
+            { front: "Why is CT not preferred for initial evaluation of prostate cancer? When is it useful?", back: "Poor zonal anatomy and soft‑tissue contrast within the prostate.<br>Useful for: determining local extraprostatic spread and detecting lymph node metastases (and PET‑CT for distant metastases)." }
+        ],
+        "11- Female Reproductive Radiology": [
+            { front: "Best first-line modality in gynecology?", back: "Ultrasound." },
+            { front: "Best modality for local tumor staging?", back: "MRI." },
+            { front: "Best test for tubal patency?", back: "HSG." },
+            { front: "Most accurate first-trimester dating measurement?", back: "CRL." },
+            { front: "Postmenopausal endometrial thickness considered abnormal?", back: "> 5 mm." },
+            { front: "Classic PCOS appearance?", back: "String of pearls." },
+            { front: "Most common benign uterine tumor?", back: "Leiomyoma (Fibroid)." },
+            { front: "Most common site of ectopic pregnancy?", back: "Fallopian tube." },
+            { front: "Classic triad of ectopic pregnancy?", back: "Amenorrhea + Pelvic pain + Vaginal bleeding." },
+            { front: "Placenta previa presentation?", back: "Painless vaginal bleeding." },
+            { front: "What is Hydrosalpinx?", back: "Dilated fluid-filled fallopian tube due to obstruction." },
+            { front: "What are the two primary ultrasound approaches for evaluating the female pelvis, and what bladder preparation is needed for each?", back: "Transabdominal US: requires full bladder (acoustic window).<br>Transvaginal US: better resolution, no full bladder needed; used for endometrial detail and early pregnancy." },
+            { front: "In a postmenopausal woman, what endometrial thickness on transvaginal US is considered abnormal, and what must be excluded?", back: "> 5 mm – abnormal.<br>Must exclude endometrial carcinoma (biopsy indicated)." },
+            { front: "What is the first sonographic sign of pregnancy and when is it visible on transvaginal vs. transabdominal US?", back: "Gestational sac (GS) – an echogenic ring with anechoic center.<br>Transvaginal: 4–5 weeks GA.<br>Transabdominal: 6 weeks GA." },
+            { front: "What is the most accurate measurement of gestational age in the first trimester, and how is it measured?", back: "Crown‑rump length (CRL) – measured from the top of the fetal head to the bottom of the trunk." },
+            { front: "What are the five components of the biophysical profile (BPP) used to assess fetal wellbeing?", back: "1. Amniotic fluid volume<br>2. Fetal body movements<br>3. Fetal limb flexion/extension<br>4. Fetal breathing movements<br>5. Fetal heart rate (non‑stress test)" },
+            { front: "What is placenta previa, and after which gestational week is the diagnosis clinically significant?", back: "Placenta remains positioned over the lower uterine segment after 36 weeks – risks painless third‑trimester bleeding." },
+            { front: "A lost intrauterine contraceptive device (IUCD) is suspected. What is the first imaging investigation? If not located in the pelvis, what next?", back: "First: ultrasound – IUCD appears as a linear hyperechoic structure.<br>If not in pelvis: plain abdominal X‑ray to rule out uterine perforation/migration." },
+            { front: "What is hysterosalpingography (HSG)? Name its reference indication.", back: "Fluoroscopic imaging after contrast injection into the cervical canal.<br>Reference method for assessing tubal patency (infertility workup)." },
+            { front: "List three absolute contraindications to HSG.", back: "1. Pregnancy (absolute – must have negative β‑hCG)<br>2. Active pelvic inflammatory disease (acute/subacute PID)<br>3. Recent uterine or tubal surgery" },
+            { front: "On HSG, what finding indicates a normal patent fallopian tube?", back: "Contrast media spills freely into the peritoneal cavity (seen between bowel loops)." },
+            { front: "A 30‑year‑old with infertility has an HSG showing a single uterine canal with a broad smooth indentation <1 cm at the fundus. What is the diagnosis?", back: "Arcuate uterus – a normal variant; the mild fundal indentation does not usually affect fertility." },
+            { front: "How can septate uterus be distinguished from bicornuate uterus on imaging?", back: "Septate: angle between uterine horns <75°; myometrial septum divides the cavity.<br>Bicornuate: angle >75°; two separate horns with a deep fundal cleft." },
+            { front: "What is hydrosalpinx and how does it appear on HSG?", back: "Distal fallopian tube blockage with fluid‑filled dilation.<br>HSG: tubal dilatation, no contrast spill into peritoneum." },
+            { front: "A young woman presents with hirsutism, obesity, and irregular menses. Ultrasound shows enlarged ovaries with multiple small peripheral follicles. What is the diagnosis and the classic appearance?", back: "Polycystic ovary syndrome (PCOS) – 'string of pearls' sign (subcapsular follicles arranged around the periphery)." },
+            { front: "List three sonographic features that suggest a malignant ovarian mass (vs. benign).", back: "1. Large size, mixed solid‑cystic composition<br>2. Thick, irregular septations (>3 mm)<br>3. Vascularity within solid components on Doppler (plus ascites or peritoneal deposits)" },
+            { front: "What is a dermoid cyst (mature cystic teratoma)? Name two characteristic imaging findings.", back: "Benign ovarian germ cell tumor containing fat, hair, teeth, calcifications.<br>Imaging: fat‑density component on CT; calcified teeth on plain film or CT; shadowing echogenic solid nodule on US." },
+            { front: "A 35‑year‑old woman has menorrhagia and a palpable pelvic mass. Ultrasound shows a well‑circumscribed hypoechoic solid mass in the myometrium. What is the most likely diagnosis?", back: "Uterine leiomyoma (fibroid) – common benign tumor of reproductive age." },
+            { front: "What is the best imaging modality to assess the local extent of cervical or endometrial carcinoma before surgery?", back: "MRI (T2‑weighted) – accurately shows tumor invasion beyond the cervix or into the myometrium." },
+            { front: "A woman with first‑trimester bleeding, amenorrhea, and unilateral adnexal pain has an empty uterus on ultrasound. A gestational sac with embryo is seen in the adnexa. What is the diagnosis?", back: "Ectopic pregnancy (most common site: fallopian tube). Rupture risk → surgical emergency." },
+            { front: "What is the single most reliable sonographic sign of an ectopic pregnancy?", back: "Extra‑uterine gestational sac containing a live embryo (or yolk sac) seen in the adnexa, with an empty uterine cavity." }
+        ],
+        "12- Brain & Skull imaging": [
+            { front: "What is the rare current indication for plain skull radiographs?", back: "Skeletal surveys in suspected non‑accidental injury (child abuse) or myeloma." },
+            { front: "On a plain skull X‑ray, what does a linear lucency paralleling the sagittal suture represent?", back: "A cranial vault fracture." },
+            { front: "What are the three main imaging findings of sinusitis on CT?", back: "1. Opacification<br>2. Mucosal thickening<br>3. Air‑fluid levels (Also: soft tissue swelling)" },
+            { front: "Why are plain X‑rays of the sinuses no longer recommended as a first‑line investigation?", back: "Limited sensitivity and specificity; CT is preferred." },
+            { front: "What is the routine slice thickness for a non‑contrast CT brain, and for the pituitary?", back: "Brain: 10 mm.<br>Pituitary: 5 mm or less." },
+            { front: "Define intra‑axial vs. extra‑axial brain lesions.", back: "Intra‑axial: within brain parenchyma (grey/white matter).<br>Extra‑axial: involving meninges, extracerebral spaces, or skull vault." },
+            { front: "List four signs of mass effect on CT brain.", back: "1. Effacement of cortical sulci<br>2. Compression of ventricle<br>3. Shift of midline structures<br>4. Transtentorial herniation" },
+            { front: "What does 'ring enhancement' on CT/MRI typically suggest? (Give three possibilities)", back: "Central necrosis with peripheral enhancement:<br>1. Abscess<br>2. High-grade glioma (glioblastoma)<br>3. Large metastasis" },
+            { front: "On T2‑weighted MRI, what is the signal intensity of CSF? On T1‑weighted?", back: "T2: BRIGHT (hyperintense).<br>T1: BLACK (hypointense)." },
+            { front: "Which MRI sequence is most sensitive for detecting acute ischemic stroke within minutes of onset?", back: "Diffusion‑weighted imaging (DWI) – shows bright signal (restricted diffusion)." },
+            { front: "A patient presents with sudden focal deficit. What is the first CT question to answer before considering thrombolysis?", back: "Exclude intracranial hemorrhage (blood is hyperdense on non‑contrast CT)." },
+            { front: "What is a watershed (border‑zone) infarct?", back: "Infarct in the region between the territories of two major cerebral arteries (e.g., ACA/MCA or MCA/PCA) – often due to hypoperfusion." },
+            { front: "Name the four types of brain tumors by cell of origin (gliomas arise from which cells)?", back: "Gliomas arise from: Astrocytes, Oligodendrocytes, Ependymal cells.<br>Other major categories: metastases, meningiomas, pituitary tumors, germ cell tumors." },
+            { front: "On CT, a solitary, irregular, low‑attenuation lesion with mass effect is most likely what?", back: "Glioma (e.g., astrocytoma or glioblastoma)." },
+            { front: "Which glioma is classically associated with intralesional calcifications on CT?", back: "Oligodendroglioma." },
+            { front: "Describe the 'butterfly glioma' appearance on MRI.", back: "Bilateral enhancement involving both frontal lobes and crossing the corpus callosum – typical of glioblastoma multiforme." },
+            { front: "What is the gold standard imaging modality for pituitary adenomas? How are they sized?", back: "MRI sella with IV contrast.<br>Microadenoma: <1 cm.<br>Macroadenoma: >1 cm." },
+            { front: "A suprasellar calcified cyst with solid and cystic components in a child is most likely what tumor?", back: "Craniopharyngioma (bimodal peaks: 5–14 years and 50–75 years)." },
+            { front: "What is the 'dural tail sign' and which tumor is it characteristic of?", back: "Linear enhancement extending from a dural‑based mass along the meninges.<br>Characteristic of meningioma." },
+            { front: "On MRI, what are Dawson fingers and which disease are they associated with?", back: "Finger‑like radial extensions of periventricular hyperintense plaques (T2/FLAIR).<br>Pathognomonic for multiple sclerosis (MS)." },
+            { front: "A ring‑enhancing lesion in the posterior fossa of an adult should be considered what until proven otherwise?", back: "Metastasis (especially from lung, breast, or melanoma)." },
+            { front: "How can MRI help differentiate a cerebral abscess from a necrotic metastasis?", back: "History is key (e.g., otitis media, dental infection). Both can show ring enhancement, but abscess often has smooth, thin, uniform wall and restricted diffusion on DWI (pus = high signal)." },
+            { front: "How is hydrocephalus imaged in infants <18 months vs. older children/adults?", back: "Infants (<18 mo): Ultrasound via open anterior fontanelle.<br>Older children/adults: CT or MRI." },
+            { front: "On CT/MRI, what distinguishes communicating from non‑communicating hydrocephalus?", back: "Communicating: all ventricles dilated (impaired CSF absorption).<br>Non‑communicating: ventricles upstream of obstruction dilated (e.g., aqueductal stenosis → dilated lateral + third, normal fourth)." },
+            { front: "What does 'Mickey Mouse ventricles' refer to?", back: "Enlargement of both lateral ventricles and the third ventricle – seen in hydrocephalus (ears = lateral ventricles, head = third ventricle)." },
+            { front: "What are the imaging signs of cerebral atrophy in an elderly patient?", back: "Enlarged ventricles (ventriculomegaly), Prominent cerebral sulci, Narrowing of gyri (hydrocephalus ex vacuo)" }
+        ]
+    }
 };
 
 /* ==========================================================
    State
    ========================================================== */
 let mode = 'exam'; // 'exam' or 'flash'
+let selectedPatch = null;
 let selectedLecture = null;
 let currentQuestions = [];
 let idx = 0;
@@ -698,6 +745,7 @@ let answeredSet = new Set();
 // Flashcard state
 let currentFlashcards = [];
 let fcIdx = 0;
+let fcWrongList = []; // To store cards marked incorrect
 
 /* ==========================================================
    Utilities
@@ -728,6 +776,7 @@ function openSelection(type) {
     mode = type;
     hideAllScreens();
     
+    selectedPatch = null;
     selectedLecture = null;
     document.getElementById('selectionScreen').classList.add('visible');
     
@@ -735,13 +784,14 @@ function openSelection(type) {
         document.getElementById('selectionTitle').textContent = 'Past Questions';
         document.getElementById('startExamBtn').style.display = 'inline-flex';
         document.getElementById('startFlashBtn').style.display = 'none';
-        renderLectures(bank);
+        renderPatches(bank);
     } else {
         document.getElementById('selectionTitle').textContent = 'Flashcards';
         document.getElementById('startExamBtn').style.display = 'none';
         document.getElementById('startFlashBtn').style.display = 'inline-flex';
-        renderLectures(flashcardsBank);
+        renderPatches(flashcardsBank);
     }
+    document.getElementById('lectureGrid').innerHTML = '';
     checkStartBtn();
 }
 
@@ -750,9 +800,45 @@ function backToWelcome() {
     document.getElementById('welcomeScreen').style.display = 'flex';
 }
 
+function renderPatches(dataObj) {
+    const grid = document.getElementById('patchGrid');
+    let html = `
+        <label class="chip-btn">
+            <input type="radio" name="patch" value="random" onchange="selectPatch('random', this)">
+            <span><i class="fas fa-shuffle" style="margin-right:5px"></i> Random Patch</span>
+        </label>
+    `;
+    Object.keys(dataObj).forEach(patch => {
+        html += `
+        <label class="chip-btn">
+            <input type="radio" name="patch" value="${patch}" onchange="selectPatch('${patch}', this)">
+            <span>${patch}</span>
+        </label>`;
+    });
+    grid.innerHTML = html;
+}
+
+function selectPatch(val) {
+    selectedPatch = val;
+    selectedLecture = null;
+    checkStartBtn();
+    
+    const dataObj = (mode === 'exam') ? bank : flashcardsBank;
+    
+    if (selectedPatch === 'random') {
+        renderLectures(dataObj);
+    } else {
+        renderLectures({ [selectedPatch]: dataObj[selectedPatch] });
+    }
+}
+
 function renderLectures(dataObj) {
     const grid = document.getElementById('lectureGrid');
-    let lectures = Object.keys(dataObj);
+    let lectures = new Set();
+    
+    Object.values(dataObj).forEach(patchObj => {
+        Object.keys(patchObj).forEach(l => lectures.add(l));
+    });
     
     let html = `
         <label class="chip-btn">
@@ -779,15 +865,15 @@ function selectLecture(val) {
 
 function checkStartBtn() {
     const btn = document.getElementById(mode === 'exam' ? 'startExamBtn' : 'startFlashBtn');
-    btn.disabled = !selectedLecture;
+    btn.disabled = !(selectedPatch && selectedLecture);
 }
 
 /* ==========================================================
    Exam Logic
-   ========================================================== */
+   ===================================================== */
 function startPractice() {
     currentQuestions = [];
-    gatherQuestions(bank);
+    gatherData(bank);
     
     if (currentQuestions.length === 0) return;
     currentQuestions = shuffle(currentQuestions);
@@ -800,15 +886,24 @@ function startPractice() {
     renderQuestion();
 }
 
-function gatherQuestions(dataObj) {
-    if (selectedLecture === 'random') {
-        Object.keys(dataObj).forEach(lec => {
-            dataObj[lec].forEach(q => currentQuestions.push({ ...q, lecture: lec }));
-        });
+function gatherData(dataObj) {
+    let targetPatches = [];
+    if (selectedPatch === 'random') {
+        targetPatches = Object.keys(dataObj);
     } else {
-        const qs = dataObj[selectedLecture] || [];
-        qs.forEach(q => currentQuestions.push({ ...q, lecture: selectedLecture }));
+        targetPatches = [selectedPatch];
     }
+
+    targetPatches.forEach(patch => {
+        if (selectedLecture === 'random') {
+            Object.keys(dataObj[patch]).forEach(lec => {
+                dataObj[patch][lec].forEach(q => currentQuestions.push({ ...q, lecture: lec }));
+            });
+        } else {
+            const qs = dataObj[patch][selectedLecture] || [];
+            qs.forEach(q => currentQuestions.push({ ...q, lecture: selectedLecture }));
+        }
+    });
 }
 
 function renderQuestion() {
@@ -827,12 +922,18 @@ function renderQuestion() {
     const nextLabel = isLast ? 'Finish' : 'Next';
     const nextIcon = isLast ? 'fa-flag-checkered' : 'fa-arrow-right';
 
+    let imgHtml = '';
+    if (qData.img) {
+        imgHtml = `<div class="q-img"><img src="${qData.img}" alt="Question Image" onerror="this.parentElement.style.display='none'"></div>`;
+    }
+
     document.getElementById('examScreen').innerHTML = `
     <div class="q-card">
         <div class="q-body">
             <div class="lecture-tag"><i class="fas fa-book" style="margin-right:5px"></i>${qData.lecture}</div>
             <div class="q-item${revealedClass}" id="qi0">
                 <div class="q-text">${qData.q}</div>
+                ${imgHtml}
                 <div class="a-text"${answerDisplay}><i class="fas fa-check-circle" style="margin-right:5px"></i>${qData.a}</div>
             </div>
         </div>
@@ -877,9 +978,10 @@ function goPrev() {
    ========================================================== */
 function startFlashcards() {
     currentFlashcards = [];
-    gatherFlashcards();
-    if (currentFlashcards.length === 0) return;
+    fcWrongList = [];
+    gatherData(flashcardsBank);
     
+    if (currentFlashcards.length === 0) return;
     currentFlashcards = shuffle(currentFlashcards);
     fcIdx = 0;
 
@@ -889,17 +991,6 @@ function startFlashcards() {
     document.getElementById('flashScreen').style.display = 'block';
     
     renderFlashcard();
-}
-
-function gatherFlashcards() {
-    if (selectedLecture === 'random') {
-        Object.keys(flashcardsBank).forEach(lec => {
-            flashcardsBank[lec].forEach(fc => currentFlashcards.push({ ...fc, lecture: lec }));
-        });
-    } else {
-        const fcs = flashcardsBank[selectedLecture] || [];
-        fcs.forEach(fc => currentFlashcards.push({ ...fc, lecture: selectedLecture }));
-    }
 }
 
 function renderFlashcard() {
@@ -914,12 +1005,25 @@ function renderFlashcard() {
     document.getElementById('flashBackText').innerHTML = fcData.back;
     document.getElementById('flashCounter').textContent = (fcIdx + 1) + ' / ' + totalQ;
 
-    // Reset flip
+    // Reset flip and buttons
     document.getElementById('flashInner').classList.remove('flipped');
+    document.getElementById('fcBtns').style.display = 'none';
 }
 
 function flipCard() {
-    document.getElementById('flashInner').classList.toggle('flipped');
+    const inner = document.getElementById('flashInner');
+    inner.classList.toggle('flipped');
+    
+    // Show Correct/Incorrect buttons only when flipped to back
+    const isFlipped = inner.classList.contains('flipped');
+    document.getElementById('fcBtns').style.display = isFlipped ? 'flex' : 'none';
+}
+
+function markFlashcard(isCorrect) {
+    if (!isCorrect) {
+        fcWrongList.push(currentFlashcards[fcIdx]);
+    }
+    nextFlashcard();
 }
 
 function nextFlashcard() {
@@ -927,7 +1031,17 @@ function nextFlashcard() {
         fcIdx++;
         renderFlashcard();
     } else {
-        showDone();
+        // End of current deck
+        if (fcWrongList.length > 0) {
+            // Review incorrect cards
+            currentFlashcards = shuffle(fcWrongList);
+            fcWrongList = []; // Reset wrong list for the new loop
+            fcIdx = 0;
+            alert("Reviewing " + currentFlashcards.length + " incorrect cards!");
+            renderFlashcard();
+        } else {
+            showDone();
+        }
     }
 }
 
@@ -956,7 +1070,7 @@ function showDone() {
     hideAllScreens();
     document.getElementById('doneText').textContent = mode === 'exam' ? 
         `You reviewed ${currentQuestions.length} questions.` : 
-        `You reviewed ${currentFlashcards.length} flashcards.`;
+        `You mastered all ${currentFlashcards.length} flashcards!`;
     document.getElementById('doneScreen').classList.add('visible');
 }
 
