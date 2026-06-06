@@ -606,7 +606,7 @@ const flashcardsBank = {
         { front: "On Doppler ultrasound, how do you differentiate testicular torsion from epididymo‑orchitis?", back: "Torsion → reduced or absent intratesticular blood flow. Epididymo‑orchitis → increased vascularity (hyperemia)." },
         { front: "What is the 'whirlpool sign' on scrotal US, and what does it indicate?", back: "Spiral‑like twisting of the spermatic cord. Indicates testicular torsion (pathognomonic finding)." },
         { front: "A 14‑year‑old boy awakens with acute right scrotal pain. US shows the right testis lying horizontally with slightly reduced flow. What is the most likely diagnosis?", back: "Testicular torsion – the horizontal lie (oblique orientation) is an additional sonographic clue." },
-        { front: "What clinical findings favor testicular torsion over epididymitis? (Name at least 3)", back: "1. Sudden onset, often nocturnal/wakening. 2. Absent cremasteric reflex. 3. Negative Prehn sign (pain not relieved by elevating testis). 4. Peak ages: neonatal period or 10–14 years." },
+        { front: "What clinical findings favor testicular torsion over epididymitis? (Name at least 3)", back: "1. Sudden onset, often nocturnal/wakening.<br>2. Absent cremasteric reflex.<br>3. Negative Prehn sign (pain not relieved by elevating testis).<br>4. Peak ages: neonatal period or 10–14 years." },
         { front: "You suspect testicular torsion with high clinical probability. Should you wait for an ultrasound?", back: "No. Do not delay definitive treatment (surgical detorsion) for diagnostic imaging if clinical suspicion is high – the testis may not survive beyond 6 hours." },
         { front: "On ultrasound, what findings suggest testicular necrosis from prolonged torsion?", back: "Heterogeneous appearance of testicular parenchyma + absence of blood flow on Doppler." },
         { front: "What is a hydrocele? How does it appear on ultrasound, and what does 'positive transillumination' mean?", back: "Painless fluid collection between layers of tunica vaginalis. US: anechoic fluid surrounding the testis. Transillumination: light passes through the fluid (positive test) – helps differentiate from solid tumor." },
@@ -911,7 +911,7 @@ function renderFlashcard() {
     document.getElementById('progressFill').style.width = ((fcIdx / totalQ) * 100) + '%';
     
     document.getElementById('flashFrontText').innerHTML = `<div style="margin-bottom:10px; font-size:12px; color:var(--muted); font-weight:700;">${fcData.lecture}</div>` + fcData.front;
-    document.getElementById('flashBackText').textContent = fcData.back;
+    document.getElementById('flashBackText').innerHTML = fcData.back;
     document.getElementById('flashCounter').textContent = (fcIdx + 1) + ' / ' + totalQ;
 
     // Reset flip
