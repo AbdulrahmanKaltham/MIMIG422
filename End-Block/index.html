@@ -412,7 +412,7 @@
             <h1>MIMG 422 End Block</h1>
             <div class="subtitle">Past Questions & Flashcards</div>
             <p class="desc">
-                Practice past questions or review high-yield flashcards organized by patch and lecture.
+                Practice past questions or review high-yield flashcards organized by lecture.
             </p>
             <div class="welcome-btns">
                 <button class="btn btn-navy" onclick="openSelection('exam')">
@@ -427,9 +427,9 @@
         <!-- ===== Selection Screen ===== -->
         <section class="selection-screen" id="selectionScreen">
             <h2 id="selectionTitle">Customize Your Practice</h2>
-            <p class="sub">Choose patch and lecture, or go random</p>
+            <p class="sub" id="selectionSub">Choose patch and lecture, or go random</p>
 
-            <div class="select-group">
+            <div class="select-group" id="patchGroup">
                 <label><i class="fas fa-calendar-alt" style="margin-right:6px"></i> Select Patch</label>
                 <div class="chip-grid" id="patchGrid"></div>
             </div>
@@ -782,16 +782,23 @@ function openSelection(type) {
     
     if (mode === 'exam') {
         document.getElementById('selectionTitle').textContent = 'Past Questions';
+        document.getElementById('selectionSub').textContent = 'Choose patch and lecture, or go random';
         document.getElementById('startExamBtn').style.display = 'inline-flex';
         document.getElementById('startFlashBtn').style.display = 'none';
+        document.getElementById('patchGroup').style.display = 'block'; // SHOW PATCH
         renderPatches(bank);
+        document.getElementById('lectureGrid').innerHTML = '';
     } else {
         document.getElementById('selectionTitle').textContent = 'Flashcards';
+        document.getElementById('selectionSub').textContent = 'Choose a lecture or go random';
         document.getElementById('startExamBtn').style.display = 'none';
         document.getElementById('startFlashBtn').style.display = 'inline-flex';
-        renderPatches(flashcardsBank);
+        document.getElementById('patchGroup').style.display = 'none'; // HIDE PATCH
+        
+        // Auto-select the first available patch for flashcards behind the scenes
+        selectedPatch = Object.keys(flashcardsBank)[0]; 
+        renderLectures(flashcardsBank, true); // true = auto-select random
     }
-    document.getElementById('lectureGrid').innerHTML = '';
     checkStartBtn();
 }
 
@@ -804,14 +811,14 @@ function renderPatches(dataObj) {
     const grid = document.getElementById('patchGrid');
     let html = `
         <label class="chip-btn">
-            <input type="radio" name="patch" value="random" onchange="selectPatch('random', this)">
+            <input type="radio" name="patch" value="random" onchange="selectPatch('random')">
             <span><i class="fas fa-shuffle" style="margin-right:5px"></i> Random Patch</span>
         </label>
     `;
     Object.keys(dataObj).forEach(patch => {
         html += `
         <label class="chip-btn">
-            <input type="radio" name="patch" value="${patch}" onchange="selectPatch('${patch}', this)">
+            <input type="radio" name="patch" value="${patch}" onchange="selectPatch('${patch}')">
             <span>${patch}</span>
         </label>`;
     });
@@ -826,23 +833,23 @@ function selectPatch(val) {
     const dataObj = (mode === 'exam') ? bank : flashcardsBank;
     
     if (selectedPatch === 'random') {
-        renderLectures(dataObj);
+        renderLectures(dataObj, true); // Auto-select random lecture
     } else {
-        renderLectures({ [selectedPatch]: dataObj[selectedPatch] });
+        renderLectures({ [selectedPatch]: dataObj[selectedPatch] }, true);
     }
 }
 
-function renderLectures(dataObj) {
+function renderLectures(dataObj, autoSelectRandom = false) {
     const grid = document.getElementById('lectureGrid');
     let lectures = new Set();
     
     Object.values(dataObj).forEach(patchObj => {
-        Object.keys(patchObj).forEach(l => lectures.add(l));
+        if(patchObj) Object.keys(patchObj).forEach(l => lectures.add(l));
     });
     
     let html = `
         <label class="chip-btn">
-            <input type="radio" name="lecture" value="random" onchange="selectLecture('random')">
+            <input type="radio" name="lecture" value="random" onchange="selectLecture('random')" ${autoSelectRandom ? 'checked' : ''}>
             <span><i class="fas fa-shuffle" style="margin-right:5px"></i> All (Random)</span>
         </label>
     `;
@@ -856,6 +863,11 @@ function renderLectures(dataObj) {
     });
     
     grid.innerHTML = html;
+
+    // Auto-select random if triggered from flash or patch change
+    if (autoSelectRandom) {
+        selectLecture('random');
+    }
 }
 
 function selectLecture(val) {
@@ -865,7 +877,11 @@ function selectLecture(val) {
 
 function checkStartBtn() {
     const btn = document.getElementById(mode === 'exam' ? 'startExamBtn' : 'startFlashBtn');
-    btn.disabled = !(selectedPatch && selectedLecture);
+    if (mode === 'exam') {
+        btn.disabled = !(selectedPatch && selectedLecture);
+    } else {
+        btn.disabled = !selectedLecture; // Patch is auto-selected for flashcards
+    }
 }
 
 /* ==========================================================
@@ -895,9 +911,12 @@ function gatherData(dataObj) {
     }
 
     targetPatches.forEach(patch => {
+        if (!dataObj[patch]) return;
         if (selectedLecture === 'random') {
             Object.keys(dataObj[patch]).forEach(lec => {
-                dataObj[patch][lec].forEach(q => currentQuestions.push({ ...q, lecture: lec }));
+                if (dataObj[patch][lec]) {
+                    dataObj[patch][lec].forEach(q => currentQuestions.push({ ...q, lecture: lec }));
+                }
             });
         } else {
             const qs = dataObj[patch][selectedLecture] || [];
@@ -1037,7 +1056,6 @@ function nextFlashcard() {
             currentFlashcards = shuffle(fcWrongList);
             fcWrongList = []; // Reset wrong list for the new loop
             fcIdx = 0;
-            alert("Reviewing " + currentFlashcards.length + " incorrect cards!");
             renderFlashcard();
         } else {
             showDone();
