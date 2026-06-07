@@ -734,7 +734,7 @@ const flashcardsBank = {
 
 /* ==========================================================
    State
-   ========================================================== */
+   ===================================================== */
 let mode = 'exam'; // 'exam' or 'flash'
 let selectedPatch = null;
 let selectedLecture = null;
@@ -749,7 +749,7 @@ let fcWrongList = []; // To store cards marked incorrect
 
 /* ==========================================================
    Utilities
-   ========================================================== */
+   ===================================================== */
 function shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
@@ -771,7 +771,7 @@ function hideAllScreens() {
 
 /* ==========================================================
    Selection Screen Logic
-   ========================================================== */
+   ===================================================== */
 function openSelection(type) {
     mode = type;
     hideAllScreens();
@@ -833,7 +833,7 @@ function selectPatch(val) {
     const dataObj = (mode === 'exam') ? bank : flashcardsBank;
     
     if (selectedPatch === 'random') {
-        renderLectures(dataObj, true); // Auto-select random lecture
+        renderLectures(dataObj, true);
     } else {
         renderLectures({ [selectedPatch]: dataObj[selectedPatch] }, true);
     }
@@ -864,7 +864,6 @@ function renderLectures(dataObj, autoSelectRandom = false) {
     
     grid.innerHTML = html;
 
-    // Auto-select random if triggered from flash or patch change
     if (autoSelectRandom) {
         selectLecture('random');
     }
@@ -880,28 +879,13 @@ function checkStartBtn() {
     if (mode === 'exam') {
         btn.disabled = !(selectedPatch && selectedLecture);
     } else {
-        btn.disabled = !selectedLecture; // Patch is auto-selected for flashcards
+        btn.disabled = !selectedLecture;
     }
 }
 
 /* ==========================================================
-   Exam Logic
+   Exam Data Gathering Logic
    ===================================================== */
-function startPractice() {
-    currentQuestions = [];
-    gatherData(bank);
-    
-    if (currentQuestions.length === 0) return;
-    currentQuestions = shuffle(currentQuestions);
-    idx = 0;
-    answeredSet = new Set();
-
-    hideAllScreens();
-    document.getElementById('topBar').classList.add('visible');
-    document.getElementById('progressTrack').classList.add('visible');
-    renderQuestion();
-}
-
 function gatherData(dataObj) {
     let targetPatches = [];
     if (selectedPatch === 'random') {
@@ -923,6 +907,59 @@ function gatherData(dataObj) {
             qs.forEach(q => currentQuestions.push({ ...q, lecture: selectedLecture }));
         }
     });
+}
+
+/* ==========================================================
+   Flashcards Data Gathering Logic (EXPLICITLY SEPARATED)
+   ===================================================== */
+function gatherFlashcards(dataObj) {
+    let targetPatches = [];
+    if (selectedPatch === 'random') {
+        targetPatches = Object.keys(dataObj);
+    } else {
+        targetPatches = [selectedPatch];
+    }
+
+    targetPatches.forEach(patch => {
+        if (!dataObj[patch]) return;
+
+        if (selectedLecture === 'random') {
+            Object.keys(dataObj[patch]).forEach(lec => {
+                dataObj[patch][lec].forEach(card => {
+                    currentFlashcards.push({
+                        ...card,
+                        lecture: lec
+                    });
+                });
+            });
+        } else {
+            const cards = dataObj[patch][selectedLecture] || [];
+            cards.forEach(card => {
+                currentFlashcards.push({
+                    ...card,
+                    lecture: selectedLecture
+                });
+            });
+        }
+    });
+}
+
+/* ==========================================================
+   Exam Logic
+   ===================================================== */
+function startPractice() {
+    currentQuestions = [];
+    gatherData(bank);
+    
+    if (currentQuestions.length === 0) return;
+    currentQuestions = shuffle(currentQuestions);
+    idx = 0;
+    answeredSet = new Set();
+
+    hideAllScreens();
+    document.getElementById('topBar').classList.add('visible');
+    document.getElementById('progressTrack').classList.add('visible');
+    renderQuestion();
 }
 
 function renderQuestion() {
@@ -994,11 +1031,11 @@ function goPrev() {
 
 /* ==========================================================
    Flashcards Logic
-   ========================================================== */
+   ===================================================== */
 function startFlashcards() {
     currentFlashcards = [];
     fcWrongList = [];
-    gatherData(flashcardsBank);
+    gatherFlashcards(flashcardsBank); // Uses the new dedicated function
     
     if (currentFlashcards.length === 0) return;
     currentFlashcards = shuffle(currentFlashcards);
@@ -1083,7 +1120,7 @@ function backToWelcomeFromFlash() {
 
 /* ==========================================================
    Done Screen
-   ========================================================== */
+   ===================================================== */
 function showDone() {
     hideAllScreens();
     document.getElementById('doneText').textContent = mode === 'exam' ? 
