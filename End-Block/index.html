@@ -262,6 +262,7 @@
             max-width: 600px;
             height: 400px;
             margin: 20px auto 10px;
+            cursor: pointer; /* Added cursor pointer to the whole card */
         }
         .fc-inner {
             position: relative;
@@ -457,7 +458,7 @@
 
         <!-- ===== Flashcards ===== -->
         <section id="flashScreen" style="display:none; padding-top: 20px;">
-            <div class="fc-container">
+            <div class="fc-container" onclick="flipCard()">
                 <div class="fc-inner" id="flashInner">
                     <div class="fc-front">
                         <span class="fc-label">Question</span>
@@ -467,15 +468,14 @@
                         <span class="fc-label">Answer</span>
                         <span id="flashBackText"></span>
                         <div class="fc-btns" id="fcBtns" style="display:none;">
-                            <button class="btn btn-green btn-sm" onclick="markFlashcard(true)"><i class="fas fa-check"></i> Correct</button>
-                            <button class="btn btn-red btn-sm" onclick="markFlashcard(false)"><i class="fas fa-times"></i> Incorrect</button>
+                            <button class="btn btn-green btn-sm" onclick="event.stopPropagation(); markFlashcard(true)"><i class="fas fa-check"></i> Correct</button>
+                            <button class="btn btn-red btn-sm" onclick="event.stopPropagation(); markFlashcard(false)"><i class="fas fa-times"></i> Incorrect</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="fc-controls">
                 <button class="btn btn-outline btn-sm" onclick="prevFlashcard()"><i class="fas fa-arrow-left"></i> Prev</button>
-                <button class="btn btn-navy btn-sm" onclick="flipCard()"><i class="fas fa-sync-alt"></i> Flip</button>
                 <div class="fc-counter" id="flashCounter">1 / 1</div>
                 <button class="btn btn-outline btn-sm" onclick="nextFlashcard()">Next <i class="fas fa-arrow-right"></i></button>
                 <button class="btn btn-navy btn-sm" onclick="shuffleFlashcards()"><i class="fas fa-shuffle"></i> Shuffle</button>
@@ -728,6 +728,79 @@ const flashcardsBank = {
             { front: "On CT/MRI, what distinguishes communicating from non‑communicating hydrocephalus?", back: "Communicating: all ventricles dilated (impaired CSF absorption).<br>Non‑communicating: ventricles upstream of obstruction dilated (e.g., aqueductal stenosis → dilated lateral + third, normal fourth)." },
             { front: "What does 'Mickey Mouse ventricles' refer to?", back: "Enlargement of both lateral ventricles and the third ventricle – seen in hydrocephalus (ears = lateral ventricles, head = third ventricle)." },
             { front: "What are the imaging signs of cerebral atrophy in an elderly patient?", back: "Enlarged ventricles (ventriculomegaly), Prominent cerebral sulci, Narrowing of gyri (hydrocephalus ex vacuo)" }
+        ],
+        "13- CT Brain Emergencies": [
+            { front: "What are the four extra‑axial spaces where hemorrhage can accumulate on CT head?", back: "1. Epidural space<br>2. Subdural space<br>3. Subarachnoid space<br>4. Intraventricular space (also parenchymal = intra‑axial)" },
+            { front: "On non‑contrast CT, how does the density of blood change from acute to chronic?", back: "Acute: Hyperdense (white)<br>Subacute: Isodense (difficult to see)<br>Chronic: Hypodense (black)" },
+            { front: "What is the classic clinical triad of epidural hematoma (EDH)?", back: "Initial loss of consciousness → lucid interval → rapid neurological decline." },
+            { front: "Describe the shape of an acute epidural hematoma on CT and why it cannot cross suture lines.", back: "Biconvex (lentiform).<br>Cannot cross sutures because the dura is tightly attached to suture lines." },
+            { front: "What artery is torn in 90% of epidural hematomas?", back: "Middle meningeal artery (arterial bleed)." },
+            { front: "A patient falls, hits head, and CT shows a crescent‑shaped hyperdense collection that crosses suture lines. What is the diagnosis?", back: "Acute subdural hematoma (SDH) – venous bleed from torn bridging veins." },
+            { front: "Why are elderly patients and infants more prone to subdural hematoma after minor trauma?", back: "Cerebral atrophy (elderly) and larger subdural space → bridging veins are stretched and more easily torn. In infants, suspect non‑accidental injury (child abuse)." },
+            { front: "On CT, a mixed-density subdural collection shows hyperdense areas adjacent to hypodense areas. What is this called and what does it indicate?", back: "Acute‑on‑chronic subdural hematoma – rebleeding into an older, chronic SDH." },
+            { front: "What is the most common cause of non‑traumatic subarachnoid hemorrhage (SAH)?", back: "Aneurysm rupture – presents with 'worst headache of life.'" },
+            { front: "Where on non‑contrast CT do you look for blood in SAH?", back: "Basal cisterns, Sylvian fissure, and cerebral sulci – hyperdense (white) CSF." },
+            { front: "A patient with sudden severe headache has a negative non‑contrast CT head. What is the next step to exclude SAH?", back: "Lumbar puncture (if CT negative but clinical suspicion high). If LP contraindicated or declined, do CTA." },
+            { front: "What is the first imaging modality for any patient with suspected acute stroke?", back: "Non‑contrast CT head – to rapidly exclude hemorrhage before thrombolysis." },
+            { front: "On early stroke CT (<2 hours), what is the hyperdense MCA sign?", back: "Thrombus in the middle cerebral artery appears hyperdense compared to the contralateral normal vessel – an early sign of large‑vessel occlusion." },
+            { front: "What are three early CT signs of ischemic stroke within 6 hours?", back: "1. Hypodense parenchyma<br>2. Loss of gray‑white matter differentiation (e.g., insular ribbon sign)<br>3. Effacement of sulci (cortical swelling)" },
+            { front: "What is the difference between cytotoxic edema and vasogenic edema on CT?", back: "Cytotoxic (stroke, early hemorrhage): involves both gray and white matter, causes mass effect.<br>Vasogenic (tumor, abscess): involves white matter only, spares gray matter, finger‑like projections." },
+            { front: "A small (<1 cm), well‑defined hypodense lesion in the basal ganglia or internal capsule on CT is most likely what?", back: "Lacunar infarct – small vessel occlusion." },
+            { front: "On CT, a biconvex (lentiform) hyperdense lesion that does not cross sutures is which type of hemorrhage?", back: "Epidural hematoma (EDH) – arterial bleed, often associated with skull fracture." },
+            { front: "What window setting is essential to identify a skull fracture on CT head?", back: "Bone window – fractures may be invisible on soft‑tissue/brain window." },
+            { front: "What is pneumocephalus and what does it suggest on CT?", back: "Air locules (very low density) within the cranium.<br>Suggests basal skull fracture involving paranasal sinuses or mastoid air cells." },
+            { front: "A patient with known hypertension presents with sudden focal deficit. CT shows a hyperdense (white) round mass in the basal ganglia. What is the most likely diagnosis?", back: "Intracerebral hemorrhage (hypertensive bleed) – typical location: putamen, thalamus, pons, or cerebellum." },
+            { front: "What is the 'dense basilar artery sign' on non‑contrast CT?", back: "Thrombus in the basilar artery appears hyperdense – an early sign of posterior circulation stroke." },
+            { front: "Why is intraventricular blood often seen layering in the occipital horns on CT?", back: "Blood is denser than CSF. In supine patient, the occipital horns are dependent, so blood settles there." },
+            { front: "A chronic subdural hematoma appears hypodense – is it still dangerous?", back: "Yes – it can cause mass effect (midline shift) even if hypodense, especially in elderly with brain atrophy who tolerate it poorly." },
+            { front: "When is contrast‑enhanced CT helpful in brain emergencies?", back: "To assess vascular occlusions/stenosis (CTA)<br>To diagnose cerebral venous thrombosis (CTV)<br>To better visualize tumors, abscesses, or vascular malformations after acute hemorrhage is excluded." },
+            { front: "What is the single most important goal of non‑contrast CT in acute stroke?", back: "Exclude intracranial hemorrhage – because thrombolysis is contraindicated in hemorrhagic stroke." }
+        ],
+        "14- Spine & Spinal cord": [
+            { front: "What are the three spinal alignment lines assessed on a lateral cervical spine X‑ray?", back: "1. Anterior vertebral body line (anterior longitudinal ligament)<br>2. Posterior vertebral body line (posterior longitudinal ligament)<br>3. Spinolaminar line (junction of laminae and spinous processes)" },
+            { front: "What is the gold standard imaging modality for spinal disorders, and why?", back: "MRI – best visualizes bone, discs, ligaments, spinal cord, and soft tissues without ionizing radiation." },
+            { front: "Define spondylosis, spondylolysis, and spondylolisthesis.", back: "Spondylosis: degenerative changes in the spine (disc narrowing, osteophytes).<br>Spondylolysis: defect in the pars interarticularis.<br>Spondylolisthesis: forward (anterolisthesis) or backward (retrolisthesis) slip of one vertebra on another." },
+            { front: "On a plain radiograph, what is the 'winking owl sign' and what does it indicate?", back: "Unilateral absence or destruction of a pedicle – the vertebra looks like an owl winking.<br>Indicates spinal metastasis (most common), multiple myeloma, or primary tumor." },
+            { front: "List four causes of vertebral body collapse and a key imaging clue for each.", back: "1. Metastasis/myeloma – pedicle destruction, disc spaces normal.<br>2. Infection (osteomyelitis) – disc space narrowed/obliterated, endplate destruction.<br>3. Osteoporosis – generalized low bone density, disc spaces normal or tall.<br>4. Trauma – wedge‑shaped vertebra, discs normal." },
+            { front: "A patient with prostate cancer has a dense (sclerotic) vertebra on X‑ray. What is the most likely cause?", back: "Osteoblastic metastasis (prostate and breast cancer are common causes of blastic metastases)." },
+            { front: "What is the difference between disk protrusion, disk extrusion (herniation), and disk sequestration on MRI?", back: "Protrusion: nucleus pulposus bulges through annulus but remains contained.<br>Extrusion (herniation): nucleus completely through a tear, but still connected.<br>Sequestration: extruded fragment separates from the parent disk." },
+            { front: "On MRI, a degenerated intervertebral disk appears __________ on T2‑weighted images because of __________.", back: "Hypointense (dark) – due to dehydration (loss of water content)." },
+            { front: "What is the preferred initial imaging modality for suspected radiculopathy or myelopathy?", back: "MRI spine without IV contrast – can show disk herniation, spinal canal narrowing, cord compression, and cord edema." },
+            { front: "A lateral lumbar X‑ray shows anterior displacement of L4 on L5 with narrowed L4‑L5 disc space. What are the two diagnoses?", back: "Spondylolisthesis (anterolisthesis) with degenerative disk disease at the same level." },
+            { front: "What are the plain film findings of spinal osteomyelitis (discitis‑osteomyelitis)?", back: "Narrowing and destruction of the intervertebral disc space<br>Paravertebral soft tissue mass<br>Endplate sclerosis (during healing)" },
+            { front: "What is the best imaging modality for early spinal osteomyelitis? Describe the MRI findings.", back: "MRI – bone marrow edema: dark on T1, bright on T2; enhancement of inflamed tissues after contrast." },
+            { front: "Classify spinal tumors by location relative to dura and cord.", back: "1. Extradural (outside dura) – most common metastasis.<br>2. Intradural extramedullary (inside dura, outside cord) – schwannoma, meningioma.<br>3. Intradural intramedullary (within cord) – ependymoma, astrocytoma, hemangioblastoma." },
+            { front: "What is the most common benign spinal neoplasm, often an incidental finding with vertical trabeculae on imaging?", back: "Vertebral hemangioma – sclerotic vertebra with prominent vertical striations ('corduroy' appearance)." },
+            { front: "On T2‑weighted MRI, a well‑defined cystic lesion within the spinal cord shows no enhancement and follows CSF signal. What is the diagnosis?", back: "Syringomyelia (fluid‑filled dilation of the central canal) – hypointense on T1, hyperintense on T2, no enhancement." },
+            { front: "A young woman presents with optic neuritis and spinal cord symptoms. MRI shows a hyperintense plaque on T2 within the cervical cord. What is the most likely diagnosis?", back: "Multiple sclerosis – demyelinating plaque, may enhance if acute." },
+            { front: "What is the difference between open and closed spinal dysraphism?", back: "Open (spina bifida aperta): neural tissue/meninges exposed to outside (e.g., myelomeningocele).<br>Closed (spina bifida occulta): vertebral defect only, skin intact, cord and meninges not herniated." },
+            { front: "On an open‑mouth odontoid view, C1 lateral masses do not align with the lateral borders of C2. What fracture is suspected?", back: "Jefferson fracture – burst fracture of C1 (atlas) from axial loading (e.g., blow to top of head)." },
+            { front: "What imaging modality is best to assess bone mineral density for osteoporosis?", back: "DEXA (dual‑energy X‑ray absorptiometry) – not plain X‑ray." },
+            { front: "Name the five methods of spinal imaging listed in the lecture (excluding nuclear medicine).", back: "1. Plain X‑ray<br>2. Myelography (rare now)<br>3. CT<br>4. MRI<br>5. Discography (rare) and spinal angiography" }
+        ],
+        "MID1 - MID2 (in final)": [
+            { front: "On MRI, what is the signal of water on T1‑weighted vs. T2‑weighted images?", back: "T1: hypointense (black)<br>T2: hyperintense (white)<br>Remember: 'Water looks white in T2' (WW2)." },
+            { front: "What is fluoroscopy? Give two clinical applications.", back: "Real‑time X‑ray imaging using continuous exposure.<br>Applications: barium swallow studies, catheter angiography, contrast studies (e.g., voiding cystourethrography)." },
+            { front: "What is the difference between screening mammography and diagnostic mammography?", back: "Screening: routine in asymptomatic women ≥40 years; single MLO view.<br>Diagnostic: for palpable mass, nipple discharge, or abnormal screening; additional views (magnification, spot compression)." },
+            { front: "In a premenopausal woman <30 years with a palpable breast mass, which imaging modality is preferred and why?", back: "Ultrasound – because dense breast tissue reduces mammography sensitivity; US also distinguishes solid from cystic masses." },
+            { front: "What are the absolute contraindications to IV iodinated contrast for CT?", back: "Renal failure (GFR <30 mL/min or creatinine >1.5 mg/dL) – risk of acute tubular necrosis.<br>Always check kidney function before injection." },
+            { front: "Which MRI contrast agent is used and on which sequence does it cause bright (hyperintense) signal?", back: "Gadolinium‑based – administered IV, then T1‑weighted images only.<br>Tissues that take up gadolinium appear white (hyperintense) on T1." },
+            { front: "A chest X‑ray shows a right hilar mass with right upper lobe consolidation. What is the most likely diagnosis?", back: "Central bronchial carcinoma – the mass narrows the bronchus, causing post‑obstructive collapse/consolidation." },
+            { front: "List four features of a malignant peripheral lung mass on chest X‑ray.", back: "1. Irregular, lobulated border<br>2. Notching or infiltrating edges<br>3. Thick, irregular cavity<br>4. Adjacent spread (rib destruction, pleural effusion)" },
+            { front: "What is the most common primary malignancy that metastasizes to the lungs? Name four others.", back: "Most common: breast cancer.<br>Others: colorectal, renal cell, melanoma, thyroid." },
+            { front: "On an erect chest X‑ray, air under the diaphragm indicates what condition? List three causes.", back: "Pneumoperitoneum (free intraperitoneal air).<br>Causes: perforated peptic ulcer, post‑laparotomy, colonic diverticulum perforation." },
+            { front: "What is the primary complex of tuberculosis on chest X‑ray?", back: "Peripheral consolidation (usually mid/upper zone) + enlarged hilar/mediastinal lymph nodes – heals with calcification (Ghon focus)." },
+            { front: "Describe the chest X‑ray appearance of miliary tuberculosis.", back: "Innumerable small (1–3 mm) nodular opacities, evenly distributed throughout both lungs – due to hematogenous spread." },
+            { front: "What is the best imaging modality for diagnosing a pericardial effusion? Describe the appearance.", back: "Echocardiography (ultrasound) – shows anechoic (black) fluid separating the visceral and parietal pericardium.<br>Globular heart on X‑ray is a non‑specific sign." },
+            { front: "Name two plain chest X‑ray signs of left atrial enlargement.", back: "1. Double density of the right cardiac border<br>2. Straightening or convexity of the left atrial appendage (left heart border)<br>3. Splaying of the carina and elevation of left main bronchus" },
+            { front: "On CT abdomen, what findings support acute appendicitis?", back: "1. Appendix diameter >6 mm<br>2. Periappendiceal fat stranding<br>3. Appendiceal fecalith (hyperdense focus)<br>4. Wall thickening or abscess" },
+            { front: "List four CT/ultrasound signs of liver cirrhosis.", back: "1. Right lobe atrophy with caudate/left lobe hypertrophy<br>2. Nodular liver surface<br>3. Splenomegaly<br>4. Ascites" },
+            { front: "Why is percutaneous biopsy of a suspected hepatic hemangioma contraindicated?", back: "High risk of severe hemorrhage or rupture – hemangiomas are vascular lesions.<br>Diagnosis is made by characteristic imaging: peripheral nodular enhancement on CT with centripetal fill‑in." },
+            { front: "On ultrasound, a liver metastasis with a hypoechoic rim and echogenic center is called a __________.", back: "Target sign (or bull’s‑eye sign) – often seen in metastatic disease." },
+            { front: "On a lateral elbow X‑ray, elevation of the posterior fat pad indicates what? In an adult, which fracture is suspected?", back: "Elbow effusion (hemarthrosis).<br>In adults: radial head fracture. In children: supracondylar fracture." },
+            { front: "Describe the typical X‑ray appearance of giant cell tumor of bone.", back: "Adult patient (epiphyseal plate closed).<br>Eccentric, expansile lytic lesion in the metaphysis extending to the subarticular bone ('soap bubble' appearance). Aggressive but benign." },
+            { front: "A 15‑year‑old has knee pain. X‑ray shows a destructive lesion in the distal femur with sunray periosteal reaction and a Codman triangle. What is the diagnosis?", back: "Osteosarcoma – most common primary malignant bone tumor in this age group, arising in the metaphysis around the knee." },
+            { front: "What is the primary role of a radionuclide bone scan in musculoskeletal radiology?", back: "Diagnose metastatic bone disease – very sensitive for detecting osteoblastic or osteolytic metastases." }
         ]
     }
 };
